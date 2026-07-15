@@ -65,5 +65,6 @@
         "submitBody": "{\"statusCode\":500,\"error\":\"Internal Server Error\",\"message\":\"stale epoch: requested=1 current=2\"}"
       }
     }
-  ]
+  ],
+  "note": "FL-02 证据：stale epoch 在 GenerationService.submit 里于调用模型之前就被拒绝，故本条不需要 GLM 凭据，用真后端代码在本机跑（modelConfigured=false 不影响本条结论）。其余 26 条打模型的场景在拿到后端凭据前一律未跑——run-eval.mjs 会拒跑。"
 }
