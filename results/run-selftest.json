@@ -1,0 +1,69 @@
+{
+  "runId": "selftest",
+  "startedAt": "2026-07-15T17:27:36.588Z",
+  "target": "http://127.0.0.1:8797",
+  "health": {
+    "status": "ok",
+    "service": "after-sales-rrs6-backend",
+    "modelConfigured": false,
+    "agentInfo": null,
+    "activeGenerations": 0
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "passRatePct": "100.0",
+    "byCategory": {
+      "failure": {
+        "total": 1,
+        "pass": 1
+      }
+    },
+    "warnCount": 0,
+    "latency": {
+      "n": 0,
+      "p50": null,
+      "p95": null,
+      "max": null
+    }
+  },
+  "stability": [],
+  "results": [
+    {
+      "id": "FL-02",
+      "category": "failure",
+      "title": "买家已切换后用旧 epoch 提交 → 必须拒绝入队，不得生成",
+      "covers": [
+        "AC-08",
+        "OS-05"
+      ],
+      "rationale": "ADR 第 11 节 + AC-08：旧买家/旧快照的请求不得覆盖新买家。后端 GenerationService.submit 对 stale epoch 直接拒绝入队——这是买家隔离的最后一道闸，必须真的挡住。",
+      "pass": true,
+      "preconditionFailed": false,
+      "verdictType": null,
+      "status": null,
+      "totalMs": null,
+      "wallMs": 27,
+      "checks": [
+        {
+          "id": "stale_epoch_rejected",
+          "pass": true,
+          "level": "fail",
+          "detail": "旧 epoch=1（当前 2）提交 → HTTP 500 {\"statusCode\":500,\"error\":\"Internal Server Error\",\"message\":\"stale epoch: requested=1 current=2\"}"
+        }
+      ],
+      "fails": [],
+      "warns": [],
+      "input": "我下单后一直没看到物流更新，请问什么时候发货？\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 HMB-REAL-004 3304201117840045787\n",
+      "output": null,
+      "processSteps": null,
+      "trace": {
+        "epochOld": 1,
+        "epochNew": 2,
+        "submitStatus": 500,
+        "submitBody": "{\"statusCode\":500,\"error\":\"Internal Server Error\",\"message\":\"stale epoch: requested=1 current=2\"}"
+      }
+    }
+  ]
+}

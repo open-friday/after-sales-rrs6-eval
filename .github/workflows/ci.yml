@@ -1,0 +1,16 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # 本仓零第三方依赖（只用 Node 内建 fetch）——不跑 npm/pnpm install，
+      # 顺带绕开 GH runner 上 npm ci 的 "Exit handler never called!"（rrs6 建仓教训）。
+      - name: syntax check
+        run: for f in $(find . -name '*.mjs' -not -path './node_modules/*'); do node --check "$f"; done
+      - name: scenario set invariants
+        run: node validate-scenarios.mjs
