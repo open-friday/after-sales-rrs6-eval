@@ -24613,6 +24613,6 @@
       "rejudged": true
     }
   ],
-  "rejudgedAt": "2026-07-15T19:17:52.182Z",
+  "rejudgedAt": "2026-07-15T19:20:52.445Z",
   "rejudgeNote": "同一批真实模型输出，用修正后的 judge.mjs 重算；未重跑模型。"
 }
