@@ -1,7 +1,7 @@
 {
   "scenario": "FL-05",
-  "ranAt": "2026-07-15T17:26:54.512Z",
-  "backendDir": "/tmp/rrs6-be",
+  "ranAt": "2026-07-15T18:47:41.387Z",
+  "backendDir": "/tmp/rrs6-backend",
   "health": {
     "status": "ok",
     "service": "after-sales-rrs6-backend",
@@ -10,30 +10,25 @@
     "activeGenerations": 0
   },
   "generation": {
-    "id": "5ece806a-3568-4ce4-8fd3-0163de3a1b41",
+    "id": "358d3bb7-30ce-491c-b531-0d57dc2c4191",
     "buyerKey": "mock:fl05_probe",
     "epoch": 1,
     "status": "unavailable",
-    "createdAt": "2026-07-15T17:26:54.507Z",
-    "acceptedAt": "2026-07-15T17:26:54.507Z",
+    "createdAt": "2026-07-15T18:47:41.384Z",
+    "acceptedAt": "2026-07-15T18:47:41.384Z",
+    "finishedAt": "2026-07-15T18:47:41.385Z",
+    "totalMs": 0,
+    "failureReason": "ACP_ENV_MISSING",
     "processSteps": [
-      {
-        "label": "已入队",
-        "state": "now",
-        "at": "2026-07-15T17:26:54.507Z"
-      },
       {
         "label": "生成服务暂时不可用",
         "state": "fail",
-        "at": "2026-07-15T17:26:54.508Z"
+        "at": "2026-07-15T18:47:41.385Z"
       }
     ],
-    "isRegeneration": false,
-    "finishedAt": "2026-07-15T17:26:54.508Z",
-    "totalMs": 0,
-    "failureReason": "ACP_ENV_MISSING"
+    "isRegeneration": false
   },
-  "rawResponse": "{\"generationId\":\"5ece806a-3568-4ce4-8fd3-0163de3a1b41\",\"queued\":false,\"generation\":{\"id\":\"5ece806a-3568-4ce4-8fd3-0163de3a1b41\",\"buyerKey\":\"mock:fl05_probe\",\"epoch\":1,\"status\":\"unavailable\",\"createdAt\":\"2026-07-15T17:26:54.507Z\",\"acceptedAt\":\"2026-07-15T17:26:54.507Z\",\"processSteps\":[{\"label\":\"已入队\",\"state\":\"now\",\"at\":\"2026-07-15T17:26:54.507Z\"},{\"label\":\"生成服务暂时不可用\",\"state\":\"fail\",\"at\":\"2026-07-15T17:26:54.508Z\"}],\"isRegeneration\":false,\"finishedAt\":\"2026-07-15T17:26:54.508Z\",\"totalMs\":0,\"failureReason\":\"ACP_ENV_MISSING\"}}",
+  "rawResponse": "{\"generationId\":\"358d3bb7-30ce-491c-b531-0d57dc2c4191\",\"queued\":false,\"generation\":{\"id\":\"358d3bb7-30ce-491c-b531-0d57dc2c4191\",\"buyerKey\":\"mock:fl05_probe\",\"epoch\":1,\"status\":\"unavailable\",\"createdAt\":\"2026-07-15T18:47:41.384Z\",\"acceptedAt\":\"2026-07-15T18:47:41.384Z\",\"finishedAt\":\"2026-07-15T18:47:41.385Z\",\"totalMs\":0,\"failureReason\":\"ACP_ENV_MISSING\",\"processSteps\":[{\"label\":\"生成服务暂时不可用\",\"state\":\"fail\",\"at\":\"2026-07-15T18:47:41.385Z\"}],\"isRegeneration\":false}}",
   "checks": [
     {
       "id": "health_reports_unconfigured",
@@ -57,7 +52,7 @@
       "id": "has_business_step",
       "pass": true,
       "level": "fail",
-      "detail": "工作过程含业务态提示: 已入队 → 生成服务暂时不可用"
+      "detail": "工作过程含业务态提示: 生成服务暂时不可用"
     },
     {
       "id": "no_model_call",
