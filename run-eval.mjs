@@ -29,6 +29,8 @@ const only = argOf('--only')?.split(',').map((s) => s.trim());
 const SAMPLES = Number(argOf('--samples', '1'));
 const CONCURRENCY = Number(argOf('--concurrency', '1'));
 const withHoldout = args.includes('--holdout');
+// 'ext' = 按真实扩展实际发出的字段喂（见 lib/mockdata.mjs 的 snapshotOf 注释）。放行结论以 ext 为准。
+const PAYLOAD = argOf('--payload', 'api');
 const RUN = argOf('--run-id', `qa${Date.now().toString(36)}`);
 const OUT = argOf('--out', `results/run-${RUN}.json`);
 
@@ -43,6 +45,7 @@ async function snap(sc, buyerId, messages, opts = {}) {
     buyerId, messages,
     dropSku: opts.dropSku ?? sc.dropSku,
     anonymous: opts.anonymous ?? sc.anonymous,
+    payload: PAYLOAD,
   });
   const r = await api.post('/api/session-snapshots', body);
   return { buyerKey: r.json.buyerKey, epoch: r.json.epoch, sent: body };
@@ -223,6 +226,7 @@ async function flowIsolation(sc, tag) {
   const bSent = snapshotOf(sc.otherMock, {
     buyerId: bid(sc, `${tag}_b`),
     messages: [{ role: 'buyer', text: MOCK[sc.otherMock].last, at: '2026-07-15T10:05:00+08:00' }],
+    payload: PAYLOAD,
   });
   const bResp = await api.post('/api/session-snapshots', bSent);
   const genB = await api.generate({ buyerKey: bResp.json.buyerKey, epoch: bResp.json.epoch });
@@ -314,6 +318,12 @@ async function runOnce(sc, si) {
     });
   }
   const checks = [...verdictJudge.checks, ...(out.extraChecks ?? [])];
+  // advisory 场景（口径未定，PRD 没定义清楚）：只观察不作闸——
+  // 所有 fail 降级为 warn，进报告交人复核，不参与放行判定。
+  // 不该拿「我自己都说不清对错的题」去卡 dev。
+  if (sc.advisory) {
+    for (const c of checks) if (!c.pass && c.level === 'fail') { c.level = 'warn'; c.advisory = true; }
+  }
   const fails = checks.filter((c) => !c.pass && c.level === 'fail');
   const warns = checks.filter((c) => !c.pass && c.level === 'warn');
   return {
@@ -352,8 +362,14 @@ async function runScenario(sc, n) {
   return {
     id: sc.id, category: sc.category, title: sc.title, covers: sc.covers,
     rationale: sc.rationale, holdout: Boolean(sc.holdout),
+    // burned：第 3 轮已公开的留出集，只当回归跑，不再作为泛化证据
+    burned: Boolean(sc.burned),
+    // advisory：口径观察项，不作放行闸
+    advisory: Boolean(sc.advisory),
     n: samples.length,
     passN,
+    // 兜底落到了哪一类——R-1(a) 的核心指标
+    fallbackTypes: samples.map((s) => s.fallback?.fallbackType).filter(Boolean),
     // 阻断项 0 容忍：任一次采样命中阻断失败，该场景即不通过。
     // 「跑 5 次过了 4 次」不是通过——客服遇到的就是那 1 次。
     pass: passN === samples.length,
@@ -415,6 +431,14 @@ function buildReport(runId, health, results, meta) {
         retriedOkN: allSamples.filter((s) => s.fallback?.retriedOk).length,
         fallbackRatePct: pct(fallbackN, modelSamples.length),
         firstTryFailRatePct: pct(firstFailN, modelSamples.length),
+        // R-1(a) 复测口径：兜底分别落到了哪一类。
+        // 低风险场景兜成 handoff = AI-02「无故转人工」未清零（dev 声称已按风险分流）。
+        fallbackByType: allSamples
+          .filter((s) => s.fallback?.fallback)
+          .reduce((a, s) => { const t = s.fallback.fallbackType ?? 'none'; a[t] = (a[t] ?? 0) + 1; return a; }, {}),
+        // 部署校验：'降级为' 是 daf19334 才有的标记文案。
+        // 出现过 ≥1 次 = 真机确实跑的是新 head（我没有该真机 SSH，只能靠行为指纹反推）。
+        newCodeMarkerN: allSamples.filter((s) => s.fallback?.newCodeMarker).length,
       },
       latency: { n: durations.length, p50: p(0.5), p95: p(0.95), max: durations.at(-1) ?? null },
     },
@@ -435,10 +459,11 @@ async function main() {
   if (needsModel && !h.modelConfigured) {
     throw new Error('modelConfigured=false —— 拒绝在非真链路上跑评测（mock 出来的通过率没有意义）');
   }
+  log(`payload=${PAYLOAD}${PAYLOAD === 'ext' ? '（按真实扩展实际发出的字段）' : '（工作台 API 原始字段）'}`);
   log(`场景 ${list.length} 条（留出集${withHoldout ? '已' : '未'}纳入） 分类=${JSON.stringify(categoryCounts())} samples=${SAMPLES} concurrency=${CONCURRENCY} run=${RUN}`);
 
   const results = [];
-  const meta = { samples: SAMPLES, concurrency: CONCURRENCY, holdout: withHoldout, backendPin: process.env.BACKEND_PIN ?? null };
+  const meta = { samples: SAMPLES, concurrency: CONCURRENCY, holdout: withHoldout, payload: PAYLOAD, backendPin: process.env.BACKEND_PIN ?? null };
   // 每条跑完就落盘：2026-07-15 首跑在稳定性阶段被 ECONNRESET 打断，
   // 结果全在内存里 → 26 条真实样本全丢。证据必须边跑边写。
   const flush = () => writeFileSync(OUT, JSON.stringify(buildReport(RUN, h, [...results].sort((a, b) => a.id.localeCompare(b.id)), meta), null, 2));

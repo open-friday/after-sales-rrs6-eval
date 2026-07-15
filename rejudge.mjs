@@ -25,6 +25,10 @@ function rejudgeSample(sc, s) {
   const pseudoRec = { verdict: s.output, status: s.status, totalMs: s.totalMs, processSteps: s.processSteps };
   const j = judgeOne(judgeSc, pseudoRec, { inputText: s.input ?? '', hasConclusion: Boolean(sc.conclusionText) });
   const checks = [...j.checks, ...extra];
+  // advisory 场景（口径未定）：fail 降级为 warn，不作闸——与 run-eval.mjs 保持同一口径
+  if (sc.advisory) {
+    for (const c of checks) if (!c.pass && c.level === 'fail') { c.level = 'warn'; c.advisory = true; }
+  }
   const fails = checks.filter((c) => !c.pass && c.level === 'fail');
   const warns = checks.filter((c) => !c.pass && c.level === 'warn');
   const pass = fails.length === 0 && !s.preconditionFailed;

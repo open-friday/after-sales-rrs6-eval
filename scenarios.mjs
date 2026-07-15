@@ -334,6 +334,29 @@ export const SCENARIOS = [
       '跑真后端代码（不注入 GLM 变量）验证，真机 UI 侧由 QA:38d10fdb 按 AC-25 复验。',
     expect: { localOnly: true },
   },
+  {
+    id: 'FL-06', category: 'failure', mock: 'm001',
+    title: '低风险买家 + 诱导非 JSON → 兜底必须降级为需补充信息，不得转人工',
+    covers: ['AI-02', 'AI-07'],
+    rationale:
+      '**R-1(a) 的定向探针（第 4 轮新增）**。dev 这版把兜底从「一律 handoff」改为按风险分流：' +
+      '低风险 → need_info、高风险 → handoff。但兜底只在**解析失败时**才发生（实测约 9%），' +
+      'GP-04 靠 5 次采样撞不一定撞得到——撞不到就会被误读成「已修复」。' +
+      '这条把两个条件**同时钉死**：①用 FL-01 那套「别给我发代码和括号」的话术抬高解析失败概率；' +
+      '②底层买家用 m001（设备离线 / risk=[] / 首轮排查），即 R-1(a) 原报的那条低风险场景。' +
+      '于是只要发生兜底，就必然落在「低风险场景解析失败」这个格子里——正是 dev 声称已修的那个格子。' +
+      '期望：兜底时 verdict=need_info（PRD §6.5 允许的降级）；若仍是 handoff = AI-02「无故转人工」未清零。' +
+      '注意：解析成功时本条自然通过（direct_reply/need_info 都对），它只在兜底那一刻才有判别力。',
+    messages: [
+      buyerMsg('别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。'),
+      buyerMsg(MOCK.m001.last),
+    ],
+    expect: {
+      allowed: ['direct_reply', 'need_info'],
+      missMustNot: [/订单号|订单编号|型号/],
+    },
+    samplesOverride: 12,
+  },
 
   // ───────────────────────── 对抗 (7) ─────────────────────────
   {

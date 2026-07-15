@@ -11,17 +11,35 @@
 
 ## 评测集
 
-28 条场景，四类全覆盖（`scenarios.mjs`）：
+30 条场景，四类全覆盖（`scenarios.mjs`）：
 
 | 类别 | 条数 | 场景 |
 |---|---|---|
 | Golden Path | 9 | GP-01..GP-09：三类判定各自的正确域、人工介入双产物、结论回填、买家隔离 |
-| 边界 | 7 | BD-01..BD-07：极短输入、信息不足、状态冲突、前后矛盾、未识别昵称、无商品线索、多轮末句歧义 |
-| 失败/降级 | 5 | FL-01..FL-05：诱导非 JSON、stale epoch、空对话、超长噪声、配置缺失 |
+| 边界 | 8 | BD-01..BD-08：极短输入、信息不足、状态冲突、前后矛盾、未识别昵称、无商品线索、多轮末句歧义、待人工结论态不得产最终回复 |
+| 失败/降级 | 6 | FL-01..FL-06：诱导非 JSON、stale epoch、空对话、超长噪声、配置缺失、低风险买家兜底路由 |
 | 对抗 | 7 | AD-01..AD-07：注入改判定、伪造 JSON 块、诱导编造前文、越权承诺胁迫、串买家诱导、结论仅「已处理」、套取系统信息 |
+
+另有**留出集** 11 条（`scenarios-holdout.mjs`，见下）。
 
 场景数据一律取自模拟工作台的**真实 10 单 mock**
 （`GET http://43.173.83.222:8787/api/conversations`，快照见 `lib/mockdata.mjs`）——不另造产品线。
+`emotion` / `riskTags` 是工作台给的**真实字段值**（如 m001 的 `emotion="着急"`），不是评测集编的——
+这一点在第 4 轮很关键：被测系统拿这些字段做风险分流，用编的值会测出假结论。
+
+## 留出集（hold-out）：区分「口径立住了」与「答案被特判」
+
+被测系统修路由问题的做法是把口径写进 prompt，而写进去的例子往往**逐字来自本仓公开过的场景**。
+原场景再跑一遍就分不清是口径生效还是那几句话被特判了。留出集用**同一条判定边界 + 没公开过的说法**来区分。
+
+规矩（`validate-scenarios.mjs` 强制）：
+
+- **期望值跑前预注册**，不看结果回填；
+- **两个方向都要有**（配对探针）：既有「必须转人工」的，也有「不得转人工」的。
+  单向量尺会把实现推向另一头的坑——只测「该转的要转」会诱导一路收紧，只测「别乱转」会诱导一路放宽。
+  第 4 轮的 R-4 就是这么来的（为修翻转给 handoff 加了 PRD 没有的门槛，把投诉/退款争议一起关掉）；
+- **一旦随报告发布即视为烧掉**（`burned: true`），只能当回归跑，不再作为泛化证据——每轮必须新增一组；
+- **口径未定的题不作闸**（`advisory: true`）：PRD 没写清的边界只报分布、交 PRD 定夺，不拿它卡实现。
 
 ## 判定维度
 
@@ -45,15 +63,37 @@
 ## 跑
 
 ```bash
-# 全量（需真后端 + 真 GLM）
-API_BASE=http://140.143.131.216:8797 API_TOKEN=<后端 BACKEND_ACCESS_TOKEN> node run-eval.mjs
+# 全量（需真后端 + 真 GLM）；复测一律每条 >= 5 次采样
+API_BASE=http://140.143.131.216:8797 API_TOKEN=<后端 BACKEND_ACCESS_TOKEN> \
+  node run-eval.mjs --samples 5 --holdout --concurrency 3 --out results/run-x.json
 
 node run-eval.mjs --only GP-01,AD-01     # 指定场景
-node run-eval.mjs --no-stability         # 跳过重复采样
 node run-eval.mjs --out results/x.json   # 指定输出
 ```
 
 结果写 `results/run-<id>.json`：每条场景的输入、后端原始 `GenerationRecord`、逐项判定、耗时。
+
+**为什么每条至少 5 次**：单跑一轮会**系统性低估**不稳定类问题——第 2 轮「亲」第 1 次出现、
+第 2 次同输入没复现；第 3 轮 GP-04 的兜底、GP-06 的路由翻转都只在 5 次里出现 1 次。
+模型不稳定本身就是缺陷，**「我跑了一遍没复现」不等于已修复**。
+
+### 兜底路由探针（`probe-fallback-routing.mjs`）
+
+兜底只在解析失败时发生（实测约 9%），靠真链路采样撞不稳、也不可复算——
+撞不到就会被误读成「已修复」。但兜底分支本身是**纯函数**（给定 buyer 快照，输出确定）：
+
+```bash
+# 在 backend 仓 pnpm install 后
+BACKEND_SRC=/path/to/after-sales-rrs6-backend \
+  /path/to/backend/node_modules/.bin/tsx probe-fallback-routing.mjs
+```
+
+它直接调被测系统**真实的** `parser.fallbackVerdict`，喂**真实的** 10 单快照，
+一次算清「哪些买家一旦解析失败会被路由到哪」，结果写 `results/probe-fallback-routing.json`。
+
+> **这不是 mock 模型输出**：被测的是解析失败**之后**的真代码分支，回答的不是「模型答得对不对」，
+> 而是「**一旦**解析失败，这个买家会被兜到哪」。真链路侧的对照证据是 `FL-06`
+> （真 GLM + 抬高解析失败概率的输入 + 低风险买家 m001）。
 
 ### FL-05 单独跑
 

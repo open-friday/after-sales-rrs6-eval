@@ -1,0 +1,3306 @@
+{
+  "runId": "r4seq",
+  "writtenAt": "2026-07-15T21:31:02.564Z",
+  "target": "http://140.143.131.216:8797",
+  "health": {
+    "status": "ok",
+    "service": "after-sales-rrs6-backend",
+    "modelConfigured": true,
+    "agentInfo": {
+      "name": "glm-acp-agent",
+      "version": "1.0.0"
+    },
+    "activeGenerations": 0
+  },
+  "meta": {
+    "samples": 5,
+    "concurrency": 1,
+    "holdout": false,
+    "payload": "ext",
+    "backendPin": "daf19334/0a525085"
+  },
+  "summary": {
+    "scenarios": 3,
+    "scenariosPassed": 2,
+    "scenariosFailed": 1,
+    "scenarioPassRatePct": "66.7",
+    "samples": 22,
+    "samplesPassed": 21,
+    "samplePassRatePct": "95.5",
+    "byCategory": {
+      "boundary": {
+        "total": 2,
+        "pass": 1
+      },
+      "failure": {
+        "total": 1,
+        "pass": 1
+      }
+    },
+    "warnCount": 0,
+    "parse": {
+      "modelSamples": 22,
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "fallbackRatePct": "0.0",
+      "firstTryFailRatePct": "0.0",
+      "fallbackByType": {},
+      "newCodeMarkerN": 0
+    },
+    "latency": {
+      "n": 22,
+      "p50": 17027,
+      "p95": 25201,
+      "max": 32628
+    }
+  },
+  "results": [
+    {
+      "id": "BD-01",
+      "category": "boundary",
+      "title": "极短无意义输入「？」→ 不得猜，应追问",
+      "covers": [
+        "AI-03",
+        "AC-13"
+      ],
+      "rationale": "输入信息量为零，PRD §6.5 need_info 的定义域。此时若 direct_reply 就是凭空生成建议（编造），若 handoff 则是无故转人工。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 4,
+      "fallbackTypes": [],
+      "pass": false,
+      "consistency": {
+        "counts": {
+          "need_info": 4,
+          "handoff": 1
+        },
+        "topType": "need_info",
+        "ratio": 0.8,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "need_info",
+          "status": "succeeded",
+          "totalMs": 14415,
+          "wallMs": 15396,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需补充信息"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info]，实际=need_info"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "minimal_ask",
+              "pass": true,
+              "level": "fail",
+              "detail": "miss=买家具体诉求/遇到的问题"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=need_info)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 普通会员 3304201117840045785\n",
+          "output": {
+            "type": "need_info",
+            "why": "买家仅发送问号，未说明具体诉求，情绪标签为高情绪但无法判断实际问题，需先了解买家需要什么帮助再推进。",
+            "missing": [
+              "买家具体诉求/遇到的问题"
+            ],
+            "draft": "您好～请问是想咨询看护器的使用问题，还是订单方面有什么需要处理的呢？方便说一下具体情况，我来帮您看看～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:20:55.156Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:20:55.157Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:20:55.157Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:20:55.157Z"
+            },
+            {
+              "label": "判断输出类型 · 需补充信息",
+              "state": "done",
+              "at": "2026-07-15T21:21:09.571Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_bd01_s0",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045785"
+              },
+              "emotion": "高情绪",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "need_info",
+          "status": "succeeded",
+          "totalMs": 17900,
+          "wallMs": 18067,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需补充信息"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info]，实际=need_info"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "minimal_ask",
+              "pass": true,
+              "level": "fail",
+              "detail": "miss=买家具体遇到的问题或诉求"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=need_info)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 普通会员 3304201117840045785\n",
+          "output": {
+            "type": "need_info",
+            "why": "买家只发了一个问号，情绪标签为高情绪但消息本身无具体诉求，无法判断问题方向，需先明确买家要咨询什么",
+            "missing": [
+              "买家具体遇到的问题或诉求"
+            ],
+            "draft": "您好～我在的！请问是看护器这边遇到什么问题了吗，方便具体说说我马上帮您看～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:21:09.847Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:21:09.848Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:21:09.848Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:21:09.848Z"
+            },
+            {
+              "label": "判断输出类型 · 需补充信息",
+              "state": "done",
+              "at": "2026-07-15T21:21:27.747Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_bd01_s1",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045785"
+              },
+              "emotion": "高情绪",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 23271,
+          "wallMs": 23437,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info]，实际=handoff"
+            }
+          ],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 普通会员 3304201117840045785\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家情绪标签为高情绪，仅发送'？'，内容模糊但情绪信号偏高，命中高情绪转人工条件",
+            "risk": "中",
+            "acceptance": "您好～看到您的消息了，我这边马上帮您看一下具体情况，麻烦稍微等我一小会儿！",
+            "fields": [
+              [
+                "买家",
+                "芝士妈妈 / 普通会员 / mock 平台"
+              ],
+              [
+                "问题类型",
+                "待明确——买家仅发'？'，无具体问题描述"
+              ],
+              [
+                "买家原话",
+                "？"
+              ],
+              [
+                "最近对话",
+                "买家发送单字符'？'，情绪标签为高情绪，无前置上下文"
+              ],
+              [
+                "商品/订单",
+                "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版 / 订单号 3304201117840045785"
+              ],
+              [
+                "已尝试",
+                "无（首条消息，尚未展开沟通）"
+              ],
+              [
+                "当前判断",
+                "情绪偏高+内容模糊，疑似不满或催促意图，需人工主动跟进确认诉求"
+              ],
+              [
+                "建议处理人",
+                "售后客服（人工）"
+              ],
+              [
+                "待确认",
+                "买家具体遇到什么问题、核心诉求是什么、情绪是否需优先安抚"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:21:27.913Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:21:27.914Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:21:27.914Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:21:27.914Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-15T21:21:51.184Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_bd01_s2",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045785"
+              },
+              "emotion": "高情绪",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "need_info",
+          "status": "succeeded",
+          "totalMs": 10600,
+          "wallMs": 10764,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需补充信息"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info]，实际=need_info"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "minimal_ask",
+              "pass": true,
+              "level": "fail",
+              "detail": "miss=买家具体遇到了什么问题（使用异常/订单/售后/咨询）"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=need_info)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 普通会员 3304201117840045785\n",
+          "output": {
+            "type": "need_info",
+            "why": "买家只发了一个问号，诉求完全不明，需先确认遇到了什么问题才能推进",
+            "missing": [
+              "买家具体遇到了什么问题（使用异常/订单/售后/咨询）"
+            ],
+            "draft": "你好呀，我看到你的消息了～不过这边只收到一个问号，还没看到具体的问题描述。能跟我说说是什么情况吗？比如是看护器的使用问题、订单相关，还是售后方面的需求？我好尽快帮你处理！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:21:51.350Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:21:51.352Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:21:51.352Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:21:51.352Z"
+            },
+            {
+              "label": "判断输出类型 · 需补充信息",
+              "state": "done",
+              "at": "2026-07-15T21:22:01.950Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_bd01_s3",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045785"
+              },
+              "emotion": "高情绪",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "need_info",
+          "status": "succeeded",
+          "totalMs": 12738,
+          "wallMs": 12903,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需补充信息"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info]，实际=need_info"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "minimal_ask",
+              "pass": true,
+              "level": "fail",
+              "detail": "miss=买家具体遇到的问题或诉求是什么"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=need_info)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 普通会员 3304201117840045785\n",
+          "output": {
+            "type": "need_info",
+            "why": "买家仅发了一个问号，未说明具体诉求，无法判断问题类型，需先了解买家要咨询什么再推进。",
+            "missing": [
+              "买家具体遇到的问题或诉求是什么"
+            ],
+            "draft": "您好～看到您的消息了，请问具体遇到什么问题呀？比如是看护器的功能使用、订单物流、还是其他方面，方便描述一下我马上帮您处理～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:22:02.116Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:22:02.117Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:22:02.117Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:22:02.117Z"
+            },
+            {
+              "label": "判断输出类型 · 需补充信息",
+              "state": "done",
+              "at": "2026-07-15T21:22:14.854Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_bd01_s4",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045785"
+              },
+              "emotion": "高情绪",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "BD-07",
+      "category": "boundary",
+      "title": "多轮连续对话 + 末句歧义「那现在怎么办」→ 必须继承前文，且不得凭空产出最终回复",
+      "covers": [
+        "AC-11",
+        "OS-07",
+        "AC-10",
+        "AC-31"
+      ],
+      "rationale": "AC-11 原文场景：末句单独有歧义，只有结合前文（云台不转、已断电重启、已重装 App）才能答。若输出只针对「那现在怎么办」给泛化话术、不体现前文已试动作，即判失败。一线排查已试尽仍未定位 → 此时升级人工（技术排查）是合理的，故 handoff 也在允许集内。\n第 2 版 R-2 在这条路径上抓到：本轮**没有回填任何人工结论**，模型却往 conclusion 字段写了「暂无人工结论…」，parser 只看字段非空就升格 final_reply、落库 isFinal=true——历史里凭空多一条「最终回复」，而它的「人工结论」原文写着「暂无人工结论」（违反 §6.7/AC-10/AC-31）。故本条改走 turns-no-conclusion：除 verdict 外，还回查 /api/history 确认库里 isFinal=true 的回复数为 0。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 5,
+      "fallbackTypes": [],
+      "pass": true,
+      "consistency": {
+        "counts": {
+          "handoff": 3,
+          "direct_reply": 2
+        },
+        "topType": "handoff",
+        "ratio": 0.6,
+        "riskFlip": true,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 18699,
+          "wallMs": 70231,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 重启"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045788\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家已完成全部标准自查仍无效、现追问下一步，属于换货/维修诉求待定 + 催促，需人工给出处理方案，暂无人工结论可承接。",
+            "risk": "中",
+            "acceptance": "橙子妈咪～让您久等了，断电重启和重装都试过还是不动，这边已经帮您转给售后专员了，马上安排给您跟进处理方案，稍等一下哈！",
+            "fields": [
+              [
+                "买家",
+                "橙子妈咪（普通会员）"
+              ],
+              [
+                "问题类型",
+                "云台旋转完全失灵，标准自查全部无效，买家追问下一步处理"
+              ],
+              [
+                "买家原话",
+                "那现在怎么办"
+              ],
+              [
+                "最近对话",
+                "断电重启+重装App均无效→买家追问处理方案，未见人工结论"
+              ],
+              [
+                "商品/订单",
+                "海马爸比4代AI智能婴儿看护器 / 3304201117840045788"
+              ],
+              [
+                "已尝试",
+                "断电重启设备、重装App、重新连接云台——全部无效"
+              ],
+              [
+                "当前判断",
+                "云台电机/机械结构大概率缺陷，疑似硬件故障，已转人工待结论"
+              ],
+              [
+                "建议处理人",
+                "售后换货/维修专员"
+              ],
+              [
+                "待确认",
+                "1.设备是否在保修期内；2.走换货还是维修；3.是否需先寄回检测"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:23:05.238Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:23:05.239Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:23:05.239Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:23:05.239Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-15T21:23:23.937Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 3,
+            "finalCount": 0,
+            "handoffCount": 2,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "direct_reply",
+                "draft": "您好橙子妈咪~旋转不动先别着急，咱们一步步看看。\n\n1. 先打开 App 确认看护器是不是\"在线\"状态——如果显示离线，旋转指令是发不过去的，可以把路由器和设备都重启一下再试。\n2. 确认当前画面是实时监控页面（不是回放页面），有些页面下旋转按钮会置灰点不动。\n3. 如果还是不行，把看护器断电 10 秒再重新通电，App 这边退出后重新登录试试~\n\n以上都试过如果左右上下还是完全转不了，那可能是电机或固件的问题，您跟我说一声，这边帮您进一步确认需不需要做后续处理哈！"
+              },
+              {
+                "turn": 2,
+                "type": "handoff",
+                "draft": "橙子妈咪辛苦了，断电重启和重装 App 都试过还是不行的话，很可能是设备本身的问题了～这边马上帮您转接售后专员，安排进一步检测确认，请稍等一下哦！"
+              },
+              {
+                "turn": 3,
+                "type": "handoff",
+                "draft": "橙子妈咪～让您久等了，断电重启和重装都试过还是不动，这边已经帮您转给售后专员了，马上安排给您跟进处理方案，稍等一下哈！"
+              }
+            ]
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 22350,
+          "wallMs": 55786,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 云台"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045788\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家已完成断电重启、重装App、重连云台全部标准自查仍无效，云台四向无响应疑似硬件故障，需技术支持远程诊断并决定保修换新/寄修，一线无法继续处理",
+            "risk": "中",
+            "acceptance": "辛苦你把这些都试过了还没好，实在抱歉～已经帮你加急转到技术支持那边了，他们会远程看一下设备状态，确认是云台电机问题的话可以直接给你走保修换新或寄修，稍等一会儿会有专员跟你联系!",
+            "fields": [
+              [
+                "买家",
+                "橙子妈咪（普通会员）"
+              ],
+              [
+                "问题类型",
+                "云台旋转完全无响应，疑似电机/硬件故障，买家追问后续方案"
+              ],
+              [
+                "买家原话",
+                "断电重启试过了，App 也重装了，云台还是一动不动。那现在怎么办"
+              ],
+              [
+                "最近对话",
+                "客服此前指引断电重启+重装App+重连云台，买家全部已尝试仍无效，现追问下一步"
+              ],
+              [
+                "商品/订单",
+                "【4K旗舰】海马爸比4代 AI智能婴儿看护器 / 3304201117840045788"
+              ],
+              [
+                "已尝试",
+                "断电重启设备、彻底重装App、重新连接云台——均无效"
+              ],
+              [
+                "当前判断",
+                "标准自助排查已全部耗尽，云台四向零响应，疑似电机/硬件故障，排除操作或网络问题"
+              ],
+              [
+                "建议处理人",
+                "技术支持/售后专员（远程诊断设备状态 + 决定保修换新或寄修）"
+              ],
+              [
+                "待确认",
+                "是否可远程进一步查设备状态；确认硬件故障后走保修换新还是寄修流程"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:23:58.174Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:23:58.175Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:23:58.175Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:23:58.175Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-15T21:24:20.524Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 3,
+            "finalCount": 0,
+            "handoffCount": 2,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "direct_reply",
+                "draft": "先别着急，旋转没反应不一定是坏了，咱们一步步排查一下～\n\n1. 先确认下 App 里的画面是不是正常显示的——如果画面正常但转不动，大概率是控制信号没传过去。\n2. 把摄像头断电重新插一下（拔掉电源等 10 秒再接上），同时把 App 彻底关掉重新打开。\n3. 看一下手机网络是不是切到了别的 WiFi 或者信号变弱了，换到和摄像头同一个 WiFi 下试试。\n4. App 里有没有提示固件更新？有的话先更新一下再试旋转。\n\n以上都试过了还是不动，告诉我一声，我这边帮你进一步确认是不是硬件的问题～"
+              },
+              {
+                "turn": 2,
+                "type": "handoff",
+                "draft": "重启和重装 App 都试过了还是不动，辛苦你了～这种情况大概率不是操作的问题，我这边马上帮你转技术售后专员跟进，看是云台电机故障还是需要走保修换新，稍等我给你接上去！"
+              },
+              {
+                "turn": 3,
+                "type": "handoff",
+                "draft": "辛苦你把这些都试过了还没好，实在抱歉～已经帮你加急转到技术支持那边了，他们会远程看一下设备状态，确认是云台电机问题的话可以直接给你走保修换新或寄修，稍等一会儿会有专员跟你联系!"
+              }
+            ]
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 17834,
+          "wallMs": 51323,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 重启"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045788\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家已执行全部标准排查仍无效，问题已指向硬件层面；当前处于已交接待人工结论状态，但买家主动追问下一步，需给临时安抚与进度说明，避免空等",
+            "draft": "您这边该试的都试过了，断电重启、重装 App 都做了，云台还是不动，基本可以判断不是软件的问题，大概率是云台组件硬件这块出了状况～\n\n情况已经登记给咱们的售后技术专员了，正在帮您核实订单的质保信息，会尽快确认是走检测维修还是换新处理。一有结果马上跟您同步，不用您再操心，稍等我催一下进度！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:24:53.895Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:24:53.896Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:24:53.896Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:24:53.896Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:25:11.729Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 3,
+            "finalCount": 0,
+            "handoffCount": 1,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "direct_reply",
+                "draft": "您好～摄像头旋转没反应先别急，咱们一步步排查一下：\n\n1. 看一下设备是不是离线了——App 里设备图标如果是灰色，说明网络断了，重启一下路由器和摄像头再试试。\n\n2. 确认摄像头通电正常，指示灯是否常亮。如果灯在闪，可能是断网了。\n\n3. 在 App 里点旋转按钮的时候，稍微等个 1-2 秒，有时候网络延迟会有点慢。\n\n4. 如果还是不行，把 App 关掉重开一次，或者换个网络（比如从 WiFi 切到手机热点）再试。\n\n先试试这几个步骤，如果都没反应那可能是硬件的问题，您再跟我说，我帮您进一步处理！"
+              },
+              {
+                "turn": 2,
+                "type": "handoff",
+                "draft": "辛苦了，重启和重装都试过云台还是一动不动，那基本可以排除软件问题了，很可能是云台本身有故障。我这边马上帮您转给售后技术同事进一步确认，看是安排检测维修还是直接换货，稍等一下下～"
+              },
+              {
+                "turn": 3,
+                "type": "direct_reply",
+                "draft": "您这边该试的都试过了，断电重启、重装 App 都做了，云台还是不动，基本可以判断不是软件的问题，大概率是云台组件硬件这块出了状况～\n\n情况已经登记给咱们的售后技术专员了，正在帮您核实订单的质保信息，会尽快确认是走检测维修还是换新处理。一有结果马上跟您同步，不用您再操心，稍等我催一下进度！"
+              }
+            ]
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 32628,
+          "wallMs": 76590,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 重启"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045788\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家已完成重启+重装App的标准排查，云台仍不动，但尚未确认物理锁和实时画面两个关键判别项，可继续引导快速确认后再决定是否转硬件售后，无争议/投诉/高情绪。",
+            "draft": "排查做得很到位了，重启和重装 App 都试过还是不动～咱再快速确认两点就行：\n\n1. 看护器机身上有没有云台物理锁（拨动开关那种），有的话看下是不是被拨到锁定位置了。\n2. App 里实时画面能正常看到吗？如果画面正常、就是转不动，大概率是云台马达的问题。\n\n这两点确认完还是不行的话，基本可以判定是硬件故障，这边就帮你走售后检测处理～方便的话先拍一段你点旋转按钮时的小视频，售后接手后能更快定位！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:25:55.917Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:25:55.919Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:25:55.919Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:25:55.919Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:26:28.545Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 3,
+            "finalCount": 0,
+            "handoffCount": 0,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "direct_reply",
+                "draft": "别急，咱一步步来排查一下～先确认这几点：\n\n1. 看护器有没有正常在线？打开App看实时画面能不能正常显示，如果画面正常、只是转不动，多半是云台马达或固件的问题。\n2. 试试把看护器断电等10秒再插上，重新启动一下，很多情况重启就好了。\n3. App里有新版本的话也更新到最新版，老版本偶尔会有控制指令发不出去的情况。\n\n重启完再点一下旋转按钮试试。如果还是左右上下都不动，麻烦拍一段你操作的小视频发给我，我这边好判断是软件还是硬件问题，再帮你走对应的售后流程～"
+              },
+              {
+                "turn": 2,
+                "type": "direct_reply",
+                "draft": "排查得很仔细了！重启和重装 App 都试过还是一动不动，咱再确认两点～\n\n1. 看护器底部或机身上有没有云台物理锁（拨动开关那种），有的话确认下是不是被锁住了。\n2. App 里实时画面能正常显示吗？如果画面正常、就是转不动，大概率是云台马达的问题。\n\n这两点也排除了的话，基本可以判定是硬件故障，这边帮你转售后做进一步检测处理～方便的话先拍一段你点旋转的小视频，售后接手后更快定位。"
+              },
+              {
+                "turn": 3,
+                "type": "direct_reply",
+                "draft": "排查做得很到位了，重启和重装 App 都试过还是不动～咱再快速确认两点就行：\n\n1. 看护器机身上有没有云台物理锁（拨动开关那种），有的话看下是不是被拨到锁定位置了。\n2. App 里实时画面能正常看到吗？如果画面正常、就是转不动，大概率是云台马达的问题。\n\n这两点确认完还是不行的话，基本可以判定是硬件故障，这边就帮你走售后检测处理～方便的话先拍一段你点旋转按钮时的小视频，售后接手后能更快定位！"
+              }
+            ]
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 16705,
+          "wallMs": 52684,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 重启"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045788\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家已穷尽标准软件排查（断电重启、重装App均无效），云台仍完全无响应，倾向于硬件/电机故障，需人工判定换货或硬件检测方案，技术排查子项命中handoff",
+            "risk": "低",
+            "acceptance": "您把能试的都试过了，辛苦了～断电重启和重装App都做了还是转不动，这种大概率是云台电机或硬件本身的问题了。我这边马上把您的情况转给技术同事，帮您确认一下到底是走换货还是先做硬件检测，一有结果马上通知您～",
+            "fields": [
+              [
+                "买家",
+                "橙子妈咪（evl_r4seq_bd07_s4）/ 普通会员"
+              ],
+              [
+                "问题类型",
+                "云台旋转功能完全失效，断电重启+重装App均无效，疑似电机/硬件故障"
+              ],
+              [
+                "买家原话",
+                "断电重启试过了，App 也重装了，云台还是一动不动。那现在怎么办"
+              ],
+              [
+                "最近对话",
+                "买家按指引完成断电重启和App重装后仍无效，追问下一步处理方案"
+              ],
+              [
+                "商品/订单",
+                "【4K旗舰】海马爸比4代 AI智能婴儿看护器摄像头 / 订单号 3304201117840045788"
+              ],
+              [
+                "已尝试",
+                "断电重启、App重装，均未解决"
+              ],
+              [
+                "当前判断",
+                "软件侧常规排查已穷尽，云台完全无响应高度怀疑电机/硬件故障，需人工判定换货或硬件检测"
+              ],
+              [
+                "建议处理人",
+                "售后技术支持 / 硬件判定岗"
+              ],
+              [
+                "待确认",
+                "是否远程进一步诊断云台电机状态；如确认硬件故障需明确换货/维修方案并同步买家"
+              ],
+              [
+                "风险等级",
+                "低"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:27:04.057Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:27:04.058Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:27:04.058Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:27:04.058Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-15T21:27:20.762Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 3,
+            "finalCount": 0,
+            "handoffCount": 2,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "direct_reply",
+                "draft": "摄像头点旋转没反应，先试试这几步排查一下～\n1. 把摄像头断电，等30秒再重新插上，重新连接后试试能不能转\n2. 换个网络环境试试（比如从WiFi切到手机流量），看是不是网络延迟导致指令没传过去\n3. 把App彻底退出再重新打开，确认App是最新版本\n4. 进App看看摄像头固件有没有可更新的，有的话先升级再试\n\n如果这几步都试了还是转不动，可能是电机或硬件的问题，您跟我说一声，我帮您进一步确认要不要走检测换新～"
+              },
+              {
+                "turn": 2,
+                "type": "handoff",
+                "draft": "收到～您这边断电重启和重装App都试过了云台还是不动，这种情况可能涉及硬件层面的问题，我帮您转到相关同事那边进一步确认下具体原因和处理方案哈，稍等一下～"
+              },
+              {
+                "turn": 3,
+                "type": "handoff",
+                "draft": "您把能试的都试过了，辛苦了～断电重启和重装App都做了还是转不动，这种大概率是云台电机或硬件本身的问题了。我这边马上把您的情况转给技术同事，帮您确认一下到底是走换货还是先做硬件检测，一有结果马上通知您～"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "FL-06",
+      "category": "failure",
+      "title": "低风险买家 + 诱导非 JSON → 兜底必须降级为需补充信息，不得转人工",
+      "covers": [
+        "AI-02",
+        "AI-07"
+      ],
+      "rationale": "**R-1(a) 的定向探针（第 4 轮新增）**。dev 这版把兜底从「一律 handoff」改为按风险分流：低风险 → need_info、高风险 → handoff。但兜底只在**解析失败时**才发生（实测约 9%），GP-04 靠 5 次采样撞不一定撞得到——撞不到就会被误读成「已修复」。这条把两个条件**同时钉死**：①用 FL-01 那套「别给我发代码和括号」的话术抬高解析失败概率；②底层买家用 m001（设备离线 / risk=[] / 首轮排查），即 R-1(a) 原报的那条低风险场景。于是只要发生兜底，就必然落在「低风险场景解析失败」这个格子里——正是 dev 声称已修的那个格子。期望：兜底时 verdict=need_info（PRD §6.5 允许的降级）；若仍是 handoff = AI-02「无故转人工」未清零。注意：解析成功时本条自然通过（direct_reply/need_info 都对），它只在兜底那一刻才有判别力。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 12,
+      "passN": 12,
+      "fallbackTypes": [],
+      "pass": true,
+      "consistency": {
+        "counts": {
+          "direct_reply": 12
+        },
+        "topType": "direct_reply",
+        "ratio": 1,
+        "riskFlip": false,
+        "n": 12
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 14824,
+          "wallMs": 14987,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "首条技术排查，买家未做过标准自查，属一线可口述指引类；买家虽着急但未命中退款/投诉/高情绪等转人工条件。",
+            "draft": "别急哈～宝宝在睡觉你肯定想赶紧看着画面，咱们一步步来，几分钟内一般能弄好。你先这样试：把看护器的电源线拔掉，等个十来秒再重新插上，让它彻底重启一次；同时确认一下家里路由器灯是不是正常亮的、手机能不能正常上网；再把手机上的 App 从后台彻底关掉（往上划掉）重新打开看看。如果第一次配对的时候看护器离路由器太远信号会差，你可以试试把看护器先挪到路由器旁边再重新配一次网。弄完之后你跟我说一声现在 App 里是还显示离线、还是变成了别的提示，我这边再接着帮你往下看～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:27:21.643Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:27:21.644Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:27:21.644Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:27:21.644Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:27:36.467Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s0",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 25117,
+          "wallMs": 25280,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "看护器离线属一线可引导的技术排查，买家尚未做基础自查，先给重启和网络确认指引即可推进",
+            "draft": "看到了，看护器连不上确实着急，孩子在睡觉想随时盯着才安心～你先试个最基础的办法：把看护器的电源拔掉重新插上，等大概30秒，然后打开App看看状态有没有从离线变成在线。同时确认一下，手机和看护器是不是连的同一个WiFi，房间那边的WiFi信号稳不稳。重启之后如果还是显示离线，你看一下设备上的指示灯是什么颜色、有没有在闪，把状态告诉我，我帮你接着往下查～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:27:36.630Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:27:36.631Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:27:36.631Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:27:36.631Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:28:01.747Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s1",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 21966,
+          "wallMs": 22130,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "设备初次连不上、App离线属一线可自查的技术排查，买家为首条消息尚未尝试标准排查，给出口语化排障指引即可，无争议/投诉/高情绪触发转人工条件。",
+            "draft": "小满，宝宝睡着你看不到画面肯定着急，我马上陪你一起排查～看护器一直显示离线，咱们先确认看护器本身的指示灯亮不亮。如果灯没亮，可能是电源没接好，你把电源线拔下来重新插紧，确认插头和机身接口都到位。如果灯是亮的但还是离线，那基本就是配网这一步的问题了。你看护器需要连家里WiFi对吧，先确认下你手机连着同一个WiFi能正常上网，另外这个看护器一般只支持2.4G的WiFi、不支持5G，你看看路由器是不是开了双频合一，如果开了的话把它关掉、单独用2.4G那个网络来配网。配网的时候把手机拿到离看护器半米以内的位置，按App里的提示一步步来，等听到看护器发出配网提示音或者看到指示灯开始闪烁了再输入WiFi密码。这几个地方你顺着过一遍，大多数离线都能解决。要是都试过还是连不上，你回我一下看护器指示灯现在是什么颜色什么状态（比如常亮蓝灯、橙色闪烁），还有你家WiFi是哪家运营商的，我接着帮你往下定位～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:28:01.911Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:28:01.912Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:28:01.912Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:28:01.912Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:28:23.877Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s2",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 17027,
+          "wallMs": 17190,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "设备连不上App显示离线，属于一线可口述引导的常规技术排查，先给排查步骤让买家自查，不构成转人工条件。",
+            "draft": "别着急，宝宝在睡觉咱们赶紧一起看看～看护器显示离线，最常见的就是WiFi的问题。您先确认一下，手机和看护器是不是连的同一个WiFi网络，然后看看您家路由器是不是5G频段的，很多看护器只支持2.4G的WiFi，如果连的是5G那个网络就会一直连不上，您可以试试切换到2.4G的WiFi再重新配一次。另外您看一下设备上那个指示灯，是什么颜色、怎么闪的，不同闪法代表不同状态。您可以长按设备上的重置键，等指示灯快闪了就说明它重新进入了配网模式，这时候把手机App彻底关掉重新打开，再走一遍添加设备的流程。配网的时候WiFi密码也留意一下有没有输错，特别是带特殊符号的密码容易打错。您先按这几步试试，要是还不行，就把设备指示灯怎么闪的、您家WiFi是什么情况告诉我，我接着帮您往下查！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:28:24.040Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:28:24.041Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:28:24.041Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:28:24.041Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:28:41.067Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s3",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 12752,
+          "wallMs": 13018,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "新品首次连接不上属常见技术问题，一线可指引基础排查（重启设备/App、检查WiFi），暂未涉及退款/投诉/高情绪，可直接给排查回复。",
+            "draft": "别着急，刚买回来第一次连不上挺常见的，咱们一步步来很快就能搞定～你先看一下看护器上面的指示灯是什么颜色，如果是一闪一闪的蓝色或者橙色，说明它在配网状态，那就没问题；如果是灭的，你长按机器背后的重置键大概5秒，等听到提示音、灯开始闪，就重置好了。然后手机这边先把App完全退掉再重新打开，确认你手机连的是2.4G的WiFi，这个看护器目前不支持5G网络哦，好多宝妈宝爸第一次就是卡在这了。接着进App点添加设备，按提示输入WiFi密码，注意密码别打错了，再把手机靠近看护器一点，一般一分钟左右就能连上。宝宝在睡觉的话，你先轻轻过去看一眼机器有没有亮灯，确认插电正常就行。如果这些都试了还是连不上，你回来告诉我指示灯的颜色和App提示的具体文字，我接着帮你判断～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:28:41.230Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:28:41.231Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:28:41.231Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:28:41.231Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:28:53.982Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s4",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 5,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 15128,
+          "wallMs": 15671,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "看护器离线属于一线可口述指引排查的常见联网问题，买家虽着急但未触及退款/投诉/高情绪等转人工情形，先给基础排查步骤",
+            "draft": "先别着急哈～宝宝睡觉看不到画面肯定挺让人担心的，咱们一步步来。首先你看一下看护器本身是不是已经插上电了，电源线有没有插紧，设备上那个小指示灯是不是亮着的。然后确认一下你家手机现在连的WiFi是好的、能正常上网。如果这些都正常，你可以试试把看护器拔掉电源等几秒再重新插上，手机App也整个关掉重新打开，看能不能重新搜到设备。要是这个看护器是新买的、之前还没跟App配对过，那就需要先在App里走一遍添加设备的步骤，让它连上你家WiFi才能用起来。你先按这个试试看，要是弄完还是离线，你就告诉我设备上那个指示灯是什么颜色的、是常亮还是闪，App里是配对到哪一步卡住的，我再帮你接着排查～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:28:54.248Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:28:54.249Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:28:54.249Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:28:54.249Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:29:09.376Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s5",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 6,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 22535,
+          "wallMs": 23072,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "首条技术求助，设备离线属一线可口述指引的自查类问题，按排查步骤先回复即可",
+            "draft": "您先别着急，看护器显示离线大部分情况是配网没连上，咱们一步步来很快能搞定～首先您看一下看护器本身的电源指示灯亮不亮，确认它是开机的状态。然后检查一下家里的WiFi是不是正常能用的，这款看护器需要连2.4G的WiFi，如果您家路由器是5G或者双频合一的，可能会连不上，您可以试试先把手机也连到2.4G网络上再操作。另外看一下看护器和路由器离得远不远，中间隔了好几堵墙的话信号也会弱导致离线。如果这些都没问题还是不行，您可以试一下长按看护器机身上的重置键大概5秒钟，听到提示音之后重新打开App按引导把设备重新添加一遍。宝宝睡着的时候您也可以先开一下房门留意一下声音，配好网了就能随时看画面了！操作中卡在哪一步随时跟我说，我帮您看～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:29:09.921Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:29:09.922Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:29:09.922Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:29:09.922Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:29:32.456Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s6",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 7,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 11655,
+          "wallMs": 11818,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "设备离线属一线可自查类技术问题，买家未尝试过任何排查，先给标准排查指引即可推进，暂不满足转人工条件。",
+            "draft": "小满你好～看护器离线确实让人着急，尤其是宝宝在睡觉时看不到画面，我先带你快速排查一下哈。首先麻烦你看一眼看护器上的指示灯是不是亮的，如果灯灭了说明可能没通电，检查一下电源线有没有插紧、插座有没有问题。如果指示灯是亮的，那大概率是网络的事，你看护器连的 WiFi 是不是正常能用？手机现在能上网对吧？麻烦把看护器和路由器都重启一下——拔掉看护器电源等十几秒再插上，路由器也重启一下，然后打开 App 等一两分钟看看能不能恢复在线。另外也要确认看护器连的是 2.4G 的 WiFi，有些路由器的 5G 频段看护器是不支持的，你可以登录路由器看一下。如果这几步都试过了还是离线，你回来跟我说灯的颜色和闪烁情况，我再帮你往下看～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:29:32.992Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:29:32.993Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:29:32.993Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:29:32.993Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:29:44.647Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s7",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 8,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 15492,
+          "wallMs": 15655,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "看护器离线属一线可自查的技术问题，买家尚未尝试基础排查，先给口头指引让其重连，无需转人工",
+            "draft": "别急别急，宝宝睡觉看不到画面确实揪心，我马上帮你看！这种刚买的看护器一直显示离线，最常见的原因是网络没配对上。你先试几个最快的办法：第一步，确认看护器的电源线插紧了、指示灯是不是亮着的；第二步，看护器一般只认2.4G的WiFi，不认5G的，你打开手机看看家里WiFi是不是连的5G频段，有的话切到2.4G那个再试；第三步，长按看护器机身上的重置键大约5到8秒，听到提示音或看到灯闪了再松手，然后打开海马爸比App重新添加设备走一遍绑定流程。如果这几步走完还是连不上，你再告诉我你手机上App显示的具体提示是什么、看护器的灯是什么颜色在闪，我再帮你细看，咱一定给你弄好～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:29:44.810Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:29:44.811Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:29:44.811Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:29:44.811Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:30:00.302Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s8",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 9,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 25201,
+          "wallMs": 25365,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "看护器离线属一线可自查类技术问题，先给排查步骤即可推进，暂无退款/投诉/高情绪命中",
+            "draft": "别着急～宝宝在睡觉看不了画面肯定很慌，咱们一步一步快速排查哈。先看一眼看护器上的指示灯亮没亮，确认电源线是不是插紧了、插座有电。然后最常见的原因是WiFi的事儿——这个看护器一般要连2.4G的WiFi，要是你家路由器是5G或者双频自动切换的，看护器可能就连不上或者连上又掉线。你可以试试把看护器电源拔掉等个十来秒再插回去，让它重新启动一下，很多时候重启完自己就能重新连上WiFi恢复画面了。另外看一下你手机上WiFi是不是也正常连着，如果WiFi本身断了那就先恢复WiFi再看App。要是这些操作完App里还是显示离线，你看一下看护器上的指示灯是什么颜色、是一直亮还是在闪，把这个告诉我，我帮你接着判断下一步怎么弄～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:30:00.466Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:30:00.467Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:30:00.467Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:30:00.467Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:30:25.667Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s9",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 10,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 14856,
+          "wallMs": 15551,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "设备/App显示离线属于一线可自助排查的技术问题，买家未提及已尝试过基础步骤，可先给排查指引，无退款/投诉/高情绪等转人工触发点。",
+            "draft": "别着急，宝宝在睡觉肯定着急看，咱们一步步来快速搞定哈～先确认下看护器插电了没有、指示灯是亮着什么颜色的？然后看下你手机和看护器是不是连的同一个WiFi，如果用的是5G网段有时候设备不认，可以试试切到2.4G那个WiFi。接着把看护器的电源拔掉等十秒再插回去，手机这边把App完全关掉再重新打开，进到设备页面看看能不能识别到。如果还是离线，你看一下路由器离看护器远不远、中间有没有隔好几堵墙，太远了信号弱也会一直显示离线。你先按这个试试，告诉我指示灯什么颜色、试完还是不行的话我再帮你看下一步，放心我陪你一起搞定～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:30:25.830Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:30:25.832Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:30:25.832Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:30:25.832Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:30:40.686Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s10",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 11,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 21032,
+          "wallMs": 21299,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。\n刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "看护器显示离线属于一线可口述指引的技术排查类，买家首条消息、尚未自查，先给排查步骤推进即可，未命中投诉/退款/高情绪等转人工条件。",
+            "draft": "别急别急，宝宝睡着我特别理解你想赶紧看到画面，咱们一步步快速排查一下～ 你先看看机器本身：电源有没有插好、开关有没有打开，机器上的指示灯亮了没、是什么颜色，要是不亮或者红灯，多半是没正常启动。然后确认下你手机连的Wi-Fi是不是2.4G的，这种看护器一般只认2.4G，5G的网络它连不上。再看下机器离路由器远不远，中间隔了几堵墙，太远信号弱也会一直掉线。最快的办法是你把看护器断电、等个十来秒再重新通电，手机上也把App彻底后台关掉重新打开，多数情况这样就回来了。要是这些都试过还是离线，你回我一下：机器指示灯什么颜色、用的是2.4G还是5G、机器和路由器大概隔多远，我接着帮你往下定位！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-15T21:30:41.381Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-15T21:30:41.382Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-15T21:30:41.382Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-15T21:30:41.382Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-15T21:31:02.413Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r4seq_fl06_s11",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784"
+              },
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

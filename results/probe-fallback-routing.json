@@ -1,0 +1,219 @@
+{
+  "probe": "fallback-routing",
+  "writtenAt": "2026-07-15T21:00:06.765Z",
+  "backendSrc": "/tmp/rrs6-backend",
+  "method": "直接调用 dev 真实实现 parser.fallbackVerdict（解析失败后的纯函数分支），未 mock 任何模型输出。两种 payload 各跑一遍：ext=真实扩展实际发出的字段（作闸），api=工作台 API 原始字段（仅观察）。",
+  "gateOn": "ext（真实扩展路径）",
+  "expectPreRegistered": {
+    "m001": {
+      "risk": "低",
+      "want": "need_info",
+      "gate": true,
+      "note": "GP-04 原报场景：设备离线首轮排查，工作台 riskTags=[]、无任何诉求争议"
+    },
+    "m005": {
+      "risk": "低",
+      "want": "need_info",
+      "gate": true,
+      "note": "云台控制故障首轮排查，工作台 riskTags=[]、无任何诉求争议"
+    },
+    "m002": {
+      "risk": "低",
+      "want": "need_info",
+      "gate": true,
+      "note": "BD-02：App 登录，一线可自查"
+    },
+    "m004": {
+      "risk": "低",
+      "want": "need_info",
+      "gate": true,
+      "note": "物流进度咨询"
+    },
+    "m007": {
+      "risk": "低",
+      "want": "need_info",
+      "gate": true,
+      "note": "内存卡识别不到，首轮排查"
+    },
+    "m008": {
+      "risk": "低",
+      "want": "need_info",
+      "gate": true,
+      "note": "App 设置引导"
+    },
+    "m009": {
+      "risk": "低",
+      "want": "need_info",
+      "gate": true,
+      "note": "GP-01：纯功能咨询，零风险"
+    },
+    "m006": {
+      "risk": "低(可争议)",
+      "want": "need_info",
+      "gate": false,
+      "note": "工作台 riskTags=「情绪较高」→ 按 PRD §6.5「高风险情绪」兜 handoff 是站得住的读法，不作闸"
+    },
+    "m003": {
+      "risk": "高",
+      "want": "handoff",
+      "gate": true,
+      "note": "GP-06：退款争议 + 情绪较高 → 本就该兜给主管"
+    },
+    "m010": {
+      "risk": "高",
+      "want": "handoff",
+      "gate": true,
+      "note": "GP-07：售后投诉 + 投诉风险 → 本就该兜给主管"
+    }
+  },
+  "rows": [
+    {
+      "mock": "m001",
+      "问题类型": "设备离线",
+      "工作台emotion": "着急",
+      "riskTags": "(空)",
+      "风险": "低",
+      "期望": "need_info",
+      "ext兜底(真实路径·作闸)": "need_info",
+      "api兜底(仅观察)": "handoff",
+      "作闸": "Y",
+      "pass": true,
+      "note": "GP-04 原报场景：设备离线首轮排查，工作台 riskTags=[]、无任何诉求争议",
+      "extEmotionSent": "(不发)"
+    },
+    {
+      "mock": "m005",
+      "问题类型": "云台控制",
+      "工作台emotion": "着急",
+      "riskTags": "(空)",
+      "风险": "低",
+      "期望": "need_info",
+      "ext兜底(真实路径·作闸)": "need_info",
+      "api兜底(仅观察)": "handoff",
+      "作闸": "Y",
+      "pass": true,
+      "note": "云台控制故障首轮排查，工作台 riskTags=[]、无任何诉求争议",
+      "extEmotionSent": "(不发)"
+    },
+    {
+      "mock": "m002",
+      "问题类型": "App 登录",
+      "工作台emotion": "普通咨询",
+      "riskTags": "首次售后",
+      "风险": "低",
+      "期望": "need_info",
+      "ext兜底(真实路径·作闸)": "handoff",
+      "api兜底(仅观察)": "need_info",
+      "作闸": "Y",
+      "pass": false,
+      "note": "BD-02：App 登录，一线可自查",
+      "extEmotionSent": "高情绪"
+    },
+    {
+      "mock": "m004",
+      "问题类型": "发货物流",
+      "工作台emotion": "普通咨询",
+      "riskTags": "(空)",
+      "风险": "低",
+      "期望": "need_info",
+      "ext兜底(真实路径·作闸)": "need_info",
+      "api兜底(仅观察)": "need_info",
+      "作闸": "Y",
+      "pass": true,
+      "note": "物流进度咨询",
+      "extEmotionSent": "(不发)"
+    },
+    {
+      "mock": "m007",
+      "问题类型": "录像回放",
+      "工作台emotion": "普通咨询",
+      "riskTags": "(空)",
+      "风险": "低",
+      "期望": "need_info",
+      "ext兜底(真实路径·作闸)": "need_info",
+      "api兜底(仅观察)": "need_info",
+      "作闸": "Y",
+      "pass": true,
+      "note": "内存卡识别不到，首轮排查",
+      "extEmotionSent": "(不发)"
+    },
+    {
+      "mock": "m008",
+      "问题类型": "App 设置",
+      "工作台emotion": "普通咨询",
+      "riskTags": "(空)",
+      "风险": "低",
+      "期望": "need_info",
+      "ext兜底(真实路径·作闸)": "need_info",
+      "api兜底(仅观察)": "need_info",
+      "作闸": "Y",
+      "pass": true,
+      "note": "App 设置引导",
+      "extEmotionSent": "(不发)"
+    },
+    {
+      "mock": "m009",
+      "问题类型": "功能咨询",
+      "工作台emotion": "普通咨询",
+      "riskTags": "(空)",
+      "风险": "低",
+      "期望": "need_info",
+      "ext兜底(真实路径·作闸)": "need_info",
+      "api兜底(仅观察)": "need_info",
+      "作闸": "Y",
+      "pass": true,
+      "note": "GP-01：纯功能咨询，零风险",
+      "extEmotionSent": "(不发)"
+    },
+    {
+      "mock": "m006",
+      "问题类型": "智能提醒",
+      "工作台emotion": "着急",
+      "riskTags": "情绪较高",
+      "风险": "低(可争议)",
+      "期望": "need_info",
+      "ext兜底(真实路径·作闸)": "handoff",
+      "api兜底(仅观察)": "handoff",
+      "作闸": "n",
+      "pass": false,
+      "note": "工作台 riskTags=「情绪较高」→ 按 PRD §6.5「高风险情绪」兜 handoff 是站得住的读法，不作闸",
+      "extEmotionSent": "高情绪"
+    },
+    {
+      "mock": "m003",
+      "问题类型": "退货退款",
+      "工作台emotion": "不满",
+      "riskTags": "退款争议/情绪较高",
+      "风险": "高",
+      "期望": "handoff",
+      "ext兜底(真实路径·作闸)": "handoff",
+      "api兜底(仅观察)": "handoff",
+      "作闸": "Y",
+      "pass": true,
+      "note": "GP-06：退款争议 + 情绪较高 → 本就该兜给主管",
+      "extEmotionSent": "高情绪"
+    },
+    {
+      "mock": "m010",
+      "问题类型": "售后投诉",
+      "工作台emotion": "投诉风险",
+      "riskTags": "情绪较高",
+      "风险": "高",
+      "期望": "handoff",
+      "ext兜底(真实路径·作闸)": "handoff",
+      "api兜底(仅观察)": "handoff",
+      "作闸": "Y",
+      "pass": true,
+      "note": "GP-07：售后投诉 + 投诉风险 → 本就该兜给主管",
+      "extEmotionSent": "高情绪"
+    }
+  ],
+  "verdict": "R-1(a) 未清零（真实路径）",
+  "extLowRiskToHandoff": [
+    "m002"
+  ],
+  "apiOnlyFragile": [
+    "m001",
+    "m005"
+  ]
+}
