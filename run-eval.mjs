@@ -218,6 +218,33 @@ async function runStability(sc) {
   return { id: sc.id, title: sc.title, ...judgeStability(types), types, samples };
 }
 
+function buildReport(runId, health, results, stability) {
+  const byCat = {};
+  for (const r of results) {
+    byCat[r.category] ??= { total: 0, pass: 0 };
+    byCat[r.category].total++;
+    if (r.pass) byCat[r.category].pass++;
+  }
+  const passed = results.filter((r) => r.pass).length;
+  const durations = results.map((r) => r.totalMs).filter((x) => typeof x === 'number').sort((a, b) => a - b);
+  const p = (q) => (durations.length ? durations[Math.max(0, Math.ceil(q * durations.length) - 1)] : null);
+  return {
+    runId,
+    writtenAt: new Date().toISOString(),
+    target: api.API_BASE,
+    health,
+    summary: {
+      total: results.length, passed, failed: results.length - passed,
+      passRatePct: results.length ? ((passed / results.length) * 100).toFixed(1) : '0',
+      byCategory: byCat,
+      warnCount: results.reduce((a, r) => a + (r.warns?.length ?? 0), 0),
+      latency: { n: durations.length, p50: p(0.5), p95: p(0.95), max: durations.at(-1) ?? null },
+    },
+    stability,
+    results,
+  };
+}
+
 async function main() {
   mkdirSync('results', { recursive: true });
   const h = await api.health();
@@ -233,6 +260,11 @@ async function main() {
   log(`场景 ${list.length} 条  分类=${JSON.stringify(categoryCounts())}  run=${RUN}`);
 
   const results = [];
+  const stability = [];
+  // 每条跑完就落盘：2026-07-15 首跑在稳定性阶段被 ECONNRESET 打断，
+  // 结果全在内存里 → 26 条真实样本全丢。证据必须边跑边写。
+  const flush = () => writeFileSync(OUT, JSON.stringify(buildReport(RUN, h, results, stability), null, 2));
+
   for (const sc of list) {
     try {
       const r = await runScenario(sc);
@@ -242,45 +274,28 @@ async function main() {
       log(`💥 ${sc.id} 跑挂: ${e.message}`);
       results.push({ id: sc.id, category: sc.category, title: sc.title, pass: false, error: e.message, checks: [], fails: [{ id: 'harness_error', detail: e.message }], warns: [] });
     }
+    flush();
   }
 
-  const stability = [];
   if (!noStability) {
     for (const sc of list.filter((s) => s.stability)) {
       log(`稳定性采样 ${sc.id} × ${sc.stability}`);
-      stability.push(await runStability(sc));
+      try {
+        stability.push(await runStability(sc));
+      } catch (e) {
+        log(`💥 ${sc.id} 稳定性跑挂: ${e.message}`);
+        stability.push({ id: sc.id, title: sc.title, error: e.message, n: 0, ratio: 0, counts: {}, types: [], samples: [] });
+      }
+      flush();
     }
   }
 
-  const byCat = {};
-  for (const r of results) {
-    byCat[r.category] ??= { total: 0, pass: 0 };
-    byCat[r.category].total++;
-    if (r.pass) byCat[r.category].pass++;
-  }
-  const passed = results.filter((r) => r.pass).length;
-  const durations = results.map((r) => r.totalMs).filter((x) => typeof x === 'number').sort((a, b) => a - b);
-  const p = (q) => (durations.length ? durations[Math.max(0, Math.ceil(q * durations.length) - 1)] : null);
-
-  const report = {
-    runId: RUN,
-    startedAt: new Date().toISOString(),
-    target: api.API_BASE,
-    health: h,
-    summary: {
-      total: results.length, passed, failed: results.length - passed,
-      passRatePct: results.length ? ((passed / results.length) * 100).toFixed(1) : '0',
-      byCategory: byCat,
-      warnCount: results.reduce((a, r) => a + (r.warns?.length ?? 0), 0),
-      latency: { n: durations.length, p50: p(0.5), p95: p(0.95), max: durations.at(-1) ?? null },
-    },
-    stability,
-    results,
-  };
-  writeFileSync(OUT, JSON.stringify(report, null, 2));
+  flush();
+  const report = buildReport(RUN, h, results, stability);
+  const passed = report.summary.passed;
   log(`—— 通过 ${passed}/${results.length} (${report.summary.passRatePct}%) · 结果写入 ${OUT}`);
-  for (const [c, v] of Object.entries(byCat)) log(`   ${CATEGORY_LABEL[c]}: ${v.pass}/${v.total}`);
-  for (const s of stability) log(`   稳定性 ${s.id}: ${s.topType} ${s.topN ?? ''} 一致率=${(s.ratio * 100).toFixed(0)}% ${s.riskFlip ? '⚠️跨风险翻转' : ''}`);
+  for (const [c, v] of Object.entries(report.summary.byCategory)) log(`   ${CATEGORY_LABEL[c]}: ${v.pass}/${v.total}`);
+  for (const s of stability) log(`   稳定性 ${s.id}: ${s.topType} 一致率=${(s.ratio * 100).toFixed(0)}% ${s.riskFlip ? '⚠️跨风险翻转' : ''}`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
