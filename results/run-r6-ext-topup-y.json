@@ -1,0 +1,2476 @@
+{
+  "runId": "r6tuy",
+  "writtenAt": "2026-07-16T03:05:59.306Z",
+  "target": "http://localhost:8902",
+  "health": {
+    "status": "ok",
+    "service": "after-sales-rrs6-backend",
+    "modelConfigured": true,
+    "agentInfo": {
+      "name": "glm-acp-agent",
+      "version": "1.0.0"
+    },
+    "activeGenerations": 0
+  },
+  "meta": {
+    "samples": 5,
+    "concurrency": 1,
+    "holdout": true,
+    "payload": "ext",
+    "backendPin": "backend@5012e610/ext@a103901"
+  },
+  "summary": {
+    "scenarios": 3,
+    "scenariosPassed": 1,
+    "scenariosFailed": 2,
+    "scenarioPassRatePct": "33.3",
+    "samples": 15,
+    "samplesPassed": 8,
+    "samplePassRatePct": "53.3",
+    "byCategory": {
+      "boundary": {
+        "total": 3,
+        "pass": 1
+      }
+    },
+    "warnCount": 1,
+    "parse": {
+      "modelSamples": 15,
+      "fallbackN": 1,
+      "parseFailFirstTryN": 1,
+      "retriedOkN": 0,
+      "fallbackRatePct": "6.7",
+      "firstTryFailRatePct": "6.7",
+      "fallbackByType": {
+        "handoff": 1
+      },
+      "newCodeMarkerN": 1
+    },
+    "latency": {
+      "n": 15,
+      "p50": 45039,
+      "p95": 45120,
+      "max": 45120
+    }
+  },
+  "results": [
+    {
+      "id": "AV-01",
+      "category": "boundary",
+      "title": "[口径观察·不作闸] 技术排查买家发来「？」→ 该追问还是该转人工？",
+      "covers": [
+        "AI-03",
+        "AI-08"
+      ],
+      "rationale": "**只报数、不作闸**（第 6 轮新增）。这一格 PRD 两条规则**都能读通、且互相矛盾**：①买家本轮原话是「？」，信息量为零 → §6.5 need_info 的定义域；②但页面「问题分类: App 登录」＝排查类，AI-08 说命中即 handoff、且「缺截图/错误提示时仍判 handoff，不得改判 need_info」。即：按买家原话该追问，按页面分类该转人工。我不拿 PRD 没解决的矛盾去卡 dev（这是我第 2 轮 BD-02 犯过的错——口径不定时模型必然在两个「都对」的解释间摇摆，而摇摆是上游的账不是 dev 的账）。故本条 allowed 全放行，只记录分布；若翻转，作为口径缺口回压 PRD。**它同时是 R-5 的活体探针**：R-5 病根若复活（首次售后 → 高情绪），这条会从 need_info 掉到 handoff——第 5 轮实测正是 need_info 4 + handoff 1（13% 无故转人工）。",
+      "holdout": false,
+      "burned": false,
+      "advisory": true,
+      "n": 5,
+      "passN": 5,
+      "fallbackTypes": [],
+      "pass": true,
+      "consistency": {
+        "counts": {
+          "handoff": 1,
+          "need_info": 3,
+          "failed": 1
+        },
+        "topType": "need_info",
+        "ratio": 0.6,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 34202,
+          "wallMs": 34220,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|handoff|direct_reply]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 新客 3304201117840045785\n",
+          "output": {
+            "type": "handoff",
+            "why": "页面问题分类为「App 登录」，属于技术排查类(触发a)，买家仅发'？'尚无具体描述，需人工介入并引导补充登录异常详情",
+            "risk": "低",
+            "acceptance": "您好！您是在登录 App 时遇到问题了吗～麻烦跟我说下具体情况，比如是登不进去、报错提示还是收不到验证码，我这边帮您跟进处理！",
+            "fields": [
+              [
+                "买家",
+                "芝士妈妈（evl_r6tuy_av01_s0，新客，首次售后）"
+              ],
+              [
+                "问题类型",
+                "App 登录（技术排查·触发a）"
+              ],
+              [
+                "买家原话",
+                "？"
+              ],
+              [
+                "最近对话",
+                "买家仅发'？'，未描述具体问题，仅页面分类指向 App 登录"
+              ],
+              [
+                "商品/订单",
+                "海马爸比二代看护器 AI智能婴儿哭声监测器 · 订单 3304201117840045785 · 已签收"
+              ],
+              [
+                "已尝试",
+                "暂无"
+              ],
+              [
+                "当前判断",
+                "买家可能登录遇阻但尚未说明，需人工确认具体故障现象"
+              ],
+              [
+                "建议处理人",
+                "技术售后专员"
+              ],
+              [
+                "待确认",
+                "具体登录异常现象（报错提示/收不到验证码/页面无响应等）、设备型号与系统版本、是否此前能正常登录"
+              ],
+              [
+                "风险等级",
+                "低"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:49:47.161Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:49:47.163Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:49:47.163Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:49:47.163Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T02:50:21.363Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_av01_s0",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 新客",
+                "order": "3304201117840045785",
+                "logistics": "已签收"
+              },
+              "problemType": "App 登录",
+              "riskTags": [
+                "首次售后"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "need_info",
+          "status": "succeeded",
+          "totalMs": 41239,
+          "wallMs": 41249,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需补充信息"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|handoff|direct_reply]，实际=need_info"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "minimal_ask",
+              "pass": true,
+              "level": "fail",
+              "detail": "miss=买家具体遇到的问题或诉求"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=need_info)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 新客 3304201117840045785\n",
+          "output": {
+            "type": "need_info",
+            "why": "买家仅发送\"？\"，未描述任何具体问题或诉求，无法判断是否进入技术排查，需先追问明确",
+            "missing": [
+              "买家具体遇到的问题或诉求"
+            ],
+            "draft": "在的～看到您这边可能和App登录有关，方便具体说说遇到了什么情况吗？比如登录报错、收不到验证码还是别的，说一下我好帮您看看～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:50:21.377Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:50:21.377Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:50:21.377Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:50:21.377Z"
+            },
+            {
+              "label": "判断输出类型 · 需补充信息",
+              "state": "done",
+              "at": "2026-07-16T02:51:02.616Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_av01_s1",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 新客",
+                "order": "3304201117840045785",
+                "logistics": "已签收"
+              },
+              "problemType": "App 登录",
+              "riskTags": [
+                "首次售后"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "need_info",
+          "status": "succeeded",
+          "totalMs": 22261,
+          "wallMs": 22268,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需补充信息"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|handoff|direct_reply]，实际=need_info"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "minimal_ask",
+              "pass": true,
+              "level": "fail",
+              "detail": "miss=买家具体遇到的问题或诉求"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=need_info)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 新客 3304201117840045785\n",
+          "output": {
+            "type": "need_info",
+            "why": "买家仅发一个问号，未说明具体诉求，无法判断问题方向，需先追问澄清",
+            "missing": [
+              "买家具体遇到的问题或诉求"
+            ],
+            "draft": "您好～看到您发来了问号，是想咨询看护器的什么问题吗?是设备使用、订单售后还是其他情况,方便的话描述一下具体遇到的情况,我好帮您跟进处理!"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:51:02.624Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:51:02.625Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:51:02.625Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:51:02.625Z"
+            },
+            {
+              "label": "判断输出类型 · 需补充信息",
+              "state": "done",
+              "at": "2026-07-16T02:51:24.885Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_av01_s2",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 新客",
+                "order": "3304201117840045785",
+                "logistics": "已签收"
+              },
+              "problemType": "App 登录",
+              "riskTags": [
+                "首次售后"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "need_info",
+          "status": "succeeded",
+          "totalMs": 28832,
+          "wallMs": 28978,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需补充信息"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|handoff|direct_reply]，实际=need_info"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "minimal_ask",
+              "pass": true,
+              "level": "fail",
+              "detail": "miss=买家具体遇到的问题或诉求"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=need_info)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 新客 3304201117840045785\n",
+          "output": {
+            "type": "need_info",
+            "why": "买家仅发了一个问号，未表达具体诉求，问题分类虽标注为App登录，但原话无任何排查或异常描述，未命中handoff触发，需先了解买家实际需要什么帮助",
+            "missing": [
+              "买家具体遇到的问题或诉求"
+            ],
+            "draft": "您好～看到您发了个问号，请问是登录方面遇到什么问题了吗？方便具体说一下情况，比如是登不上、收不到验证码，还是页面有什么提示，我来帮您看看～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:51:25.031Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:51:25.050Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:51:25.050Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:51:25.050Z"
+            },
+            {
+              "label": "判断输出类型 · 需补充信息",
+              "state": "done",
+              "at": "2026-07-16T02:51:53.863Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_av01_s3",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 新客",
+                "order": "3304201117840045785",
+                "logistics": "已签收"
+              },
+              "problemType": "App 登录",
+              "riskTags": [
+                "首次售后"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45044,
+          "wallMs": 45051,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "warn",
+              "detail": "期望 ∈ [need_info|handoff|direct_reply]，实际=failed",
+              "advisory": true
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [],
+          "warns": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "warn",
+              "detail": "期望 ∈ [need_info|handoff|direct_reply]，实际=failed",
+              "advisory": true
+            }
+          ],
+          "input": "？\n海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选 会员等级: 新客 3304201117840045785\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:51:53.872Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:51:53.873Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:51:53.873Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:51:53.873Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T02:52:38.916Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_av01_s4",
+              "buyerName": "芝士妈妈",
+              "snippet": "？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代看护器 AI智能婴儿哭声监测器 基础版与守护版可选",
+                "meta": "会员等级: 新客",
+                "order": "3304201117840045785",
+                "logistics": "已签收"
+              },
+              "problemType": "App 登录",
+              "riskTags": [
+                "首次售后"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "BD-04",
+      "category": "boundary",
+      "title": "前后矛盾输入 → 应澄清，不得挑一个当真",
+      "covers": [
+        "AI-03",
+        "AC-13"
+      ],
+      "rationale": "买家先说已经收到并装好，后一句又说还没收到货。存在事实冲突时，PRD §6.5「风险不明应降级为需补充信息」——应澄清矛盾而不是二选一直接答。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 0,
+      "fallbackTypes": [],
+      "pass": false,
+      "consistency": {
+        "counts": {
+          "failed": 5
+        },
+        "topType": "failed",
+        "ratio": 1,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45062,
+          "wallMs": 45088,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            }
+          ],
+          "warns": [],
+          "input": "卡我已经收到了，也插到看护器里了。\n话说我这个东西到现在还没收到呢，你们到底发了没有？\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:52:38.923Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:52:38.924Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:52:38.924Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:52:38.924Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T02:53:23.985Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_bd04_s0",
+              "buyerName": "豆包爸爸",
+              "snippet": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "卡我已经收到了，也插到看护器里了。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45076,
+          "wallMs": 45089,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            }
+          ],
+          "warns": [],
+          "input": "卡我已经收到了，也插到看护器里了。\n话说我这个东西到现在还没收到呢，你们到底发了没有？\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:53:24.014Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:53:24.015Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:53:24.015Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:53:24.015Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T02:54:09.090Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_bd04_s1",
+              "buyerName": "豆包爸爸",
+              "snippet": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "卡我已经收到了，也插到看护器里了。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45072,
+          "wallMs": 45089,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            }
+          ],
+          "warns": [],
+          "input": "卡我已经收到了，也插到看护器里了。\n话说我这个东西到现在还没收到呢，你们到底发了没有？\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:54:09.114Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:54:09.116Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:54:09.116Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:54:09.116Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T02:54:54.186Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_bd04_s2",
+              "buyerName": "豆包爸爸",
+              "snippet": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "卡我已经收到了，也插到看护器里了。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45092,
+          "wallMs": 45132,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            }
+          ],
+          "warns": [],
+          "input": "卡我已经收到了，也插到看护器里了。\n话说我这个东西到现在还没收到呢，你们到底发了没有？\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:54:54.209Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:54:54.209Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:54:54.209Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:54:54.209Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T02:55:39.301Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_bd04_s3",
+              "buyerName": "豆包爸爸",
+              "snippet": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "卡我已经收到了，也插到看护器里了。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45091,
+          "wallMs": 45118,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [need_info|direct_reply|handoff]，实际=failed"
+            }
+          ],
+          "warns": [],
+          "input": "卡我已经收到了，也插到看护器里了。\n话说我这个东西到现在还没收到呢，你们到底发了没有？\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:55:39.347Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:55:39.350Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:55:39.350Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:55:39.350Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T02:56:24.438Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6tuy_bd04_s4",
+              "buyerName": "豆包爸爸",
+              "snippet": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "卡我已经收到了，也插到看护器里了。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                },
+                {
+                  "role": "buyer",
+                  "text": "话说我这个东西到现在还没收到呢，你们到底发了没有？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "BD-07",
+      "category": "boundary",
+      "title": "多轮连续对话 + 末句歧义「那现在怎么办」→ 必须继承前文，且不得凭空产出最终回复",
+      "covers": [
+        "AC-11",
+        "OS-07",
+        "AC-10",
+        "AC-31"
+      ],
+      "rationale": "AC-11 原文场景：末句单独有歧义，只有结合前文（云台不转、已断电重启、已重装 App）才能答。若输出只针对「那现在怎么办」给泛化话术、不体现前文已试动作，即判失败。一线排查已试尽仍未定位 → 此时升级人工（技术排查）是合理的，故 handoff 也在允许集内。\n第 2 版 R-2 在这条路径上抓到：本轮**没有回填任何人工结论**，模型却往 conclusion 字段写了「暂无人工结论…」，parser 只看字段非空就升格 final_reply、落库 isFinal=true——历史里凭空多一条「最终回复」，而它的「人工结论」原文写着「暂无人工结论」（违反 §6.7/AC-10/AC-31）。故本条改走 turns-no-conclusion：除 verdict 外，还回查 /api/history 确认库里 isFinal=true 的回复数为 0。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 3,
+      "fallbackTypes": [
+        "handoff"
+      ],
+      "pass": false,
+      "consistency": {
+        "counts": {
+          "failed": 2,
+          "handoff": 3
+        },
+        "topType": "handoff",
+        "ratio": 0.6,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 1,
+      "parseFailFirstTryN": 1,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45120,
+          "wallMs": 117597,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": false,
+              "level": "fail",
+              "detail": "未引用上下文中的关键已知信息"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=failed"
+            },
+            {
+              "id": "must_reference",
+              "pass": false,
+              "level": "fail",
+              "detail": "未引用上下文中的关键已知信息"
+            }
+          ],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 复购用户 3304201117840045788\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:57:36.974Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:57:36.982Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:57:36.982Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:57:36.982Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T02:58:22.094Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 2,
+            "finalCount": 0,
+            "handoffCount": 2,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "handoff",
+                "draft": "别着急～云台按了没反应确实挺耽误看娃的，这块我得给您查仔细点。我先把情况记下来转技术那边，确认是设置问题还是设备本身的问题。方便的话先帮我确认两点：1）看护器现在是开机、App能正常看到画面的状态吗？2）点云台方向键的时候，App上有没有报错提示或者按钮是灰色的？您这边反馈完我马上安排跟进！"
+              },
+              {
+                "turn": 2,
+                "type": "handoff",
+                "draft": "重启和重装App都试过了还是不动，辛苦你了！这种情况大概率是云台电机那块的问题，我这边马上帮你转到技术支持做进一步检测，这边先帮你留好记录～"
+              },
+              {
+                "turn": 3,
+                "type": "failed"
+              }
+            ]
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 40841,
+          "wallMs": 120543,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 重启"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 复购用户 3304201117840045788\n",
+          "output": {
+            "type": "handoff",
+            "why": "云台无响应属设备故障排查类，买家已做断电重启+重装App仍无效，命中技术排查触发，且当前尚无人工结论可供直接回复",
+            "risk": "中",
+            "acceptance": "橙子妈咪您好，辛苦您已经试过重启和重装 App 了～云台还是不动的话，这边的确得让技术同事来看一下设备本身的情况，怕耽误您看护宝宝，我马上帮您加急转给技术支持，会尽快给您一个处理方案，麻烦稍等一下～",
+            "fields": [
+              [
+                "买家",
+                "橙子妈咪（复购用户）"
+              ],
+              [
+                "问题类型",
+                "云台控制无响应，疑似设备故障，买家已重试基础排查仍无效"
+              ],
+              [
+                "买家原话",
+                "断电重启试过了，App 也重装了，云台还是一动不动。那现在怎么办"
+              ],
+              [
+                "最近对话",
+                "买家反馈已断电重启+重装App，云台左右上下均无反应，询问后续怎么办"
+              ],
+              [
+                "商品/订单",
+                "【4K旗舰】海马爸比4代 AI智能婴儿看护器 · 订单 3304201117840045788 · 已签收"
+              ],
+              [
+                "已尝试",
+                "断电重启设备、重新连接App、重装App，均无效"
+              ],
+              [
+                "当前判断",
+                "基础排查已穷尽仍无响应，高度疑似云台硬件故障，需技术支持介入判定"
+              ],
+              [
+                "建议处理人",
+                "技术支持 / 售后专员（优先处理，复购用户）"
+              ],
+              [
+                "待确认",
+                "设备固件版本、App内云台界面是否有报错提示、操作截图或录屏、是否可走换新/检测"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T02:59:41.792Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T02:59:41.795Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T02:59:41.795Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T02:59:41.795Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T03:00:22.633Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 3,
+            "finalCount": 0,
+            "handoffCount": 3,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "handoff",
+                "draft": "橙子妈咪别急～云台点了不转动这事我马上帮您查清楚，您先稍等一下，我安排技术同事一起看看到底是设置、App 还是设备本身的问题，确定完第一时间回复您～"
+              },
+              {
+                "turn": 2,
+                "type": "handoff",
+                "draft": "橙子妈咪，重启和重装都试过了还是不动，辛苦您了～这种情况大概率是云台组件本身出了问题，不是设置能解决的。这边马上帮您转给技术售后专项处理，尽快给您一个明确方案，您稍等我一下～"
+              },
+              {
+                "turn": 3,
+                "type": "handoff",
+                "draft": "橙子妈咪您好，辛苦您已经试过重启和重装 App 了～云台还是不动的话，这边的确得让技术同事来看一下设备本身的情况，怕耽误您看护宝宝，我马上帮您加急转给技术支持，会尽快给您一个处理方案，麻烦稍等一下～"
+              }
+            ]
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 43206,
+          "wallMs": 105399,
+          "fallback": {
+            "fallback": true,
+            "byStep": true,
+            "byFingerprint": true,
+            "fallbackType": "handoff",
+            "parseFailedFirstTry": true,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": true,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入",
+              "解析失败已按 PRD §6.5 降级为需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 云台"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            },
+            {
+              "id": "fallback_fields_complete",
+              "pass": true,
+              "level": "fail",
+              "detail": "兜底但交接摘要 10 字段齐全（10 项）"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 复购用户 3304201117840045788\n",
+          "output": {
+            "type": "handoff",
+            "why": "模型本轮输出无法结构化解析，已按 PRD §6.5 降级",
+            "risk": "中",
+            "acceptance": "你反馈的情况我已经记下了，我这边先帮你确认一下具体情况，稍后给你准确答复，你先别急～",
+            "fields": [
+              [
+                "买家",
+                "橙子妈咪（mock）"
+              ],
+              [
+                "问题类型",
+                "云台控制"
+              ],
+              [
+                "买家原话",
+                "那现在怎么办"
+              ],
+              [
+                "最近对话",
+                "买家: 摄像头点旋转没反应，左右上下都不动，是不是坏了？ | 客服: 你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～ | 买家: 断电重启试过了，App 也重装了，云台还是一动不动。 | 买家: 那现在怎么办"
+              ],
+              [
+                "商品/订单",
+                "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 · 会员等级: 复购用户 · 订单 3304201117840045788 · 已签收"
+              ],
+              [
+                "已尝试",
+                "AI 结构化解析失败，尚未产出可发送草案"
+              ],
+              [
+                "当前判断",
+                "模型本轮输出无法结构化解析，已按 PRD §6.5 降级"
+              ],
+              [
+                "建议处理人",
+                "售后主管"
+              ],
+              [
+                "待确认",
+                "需要人工确认具体处理口径"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T03:01:24.856Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T03:01:24.861Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T03:01:24.861Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T03:01:24.861Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T03:02:08.062Z"
+            },
+            {
+              "label": "解析失败已按 PRD §6.5 降级为需人工介入",
+              "state": "fail",
+              "at": "2026-07-16T03:02:08.062Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 2,
+            "finalCount": 0,
+            "handoffCount": 2,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "handoff",
+                "draft": "橙子妈咪您别急～云台点了不动确实得排查一下是设置问题还是硬件问题，我这边马上帮您转到技术专员跟进，会尽快给您一个明确说法!"
+              },
+              {
+                "turn": 2,
+                "type": "failed"
+              },
+              {
+                "turn": 3,
+                "type": "handoff",
+                "draft": "你反馈的情况我已经记下了，我这边先帮你确认一下具体情况，稍后给你准确答复，你先别急～"
+              }
+            ]
+          }
+        },
+        {
+          "sample": 3,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45039,
+          "wallMs": 114041,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": false,
+              "level": "fail",
+              "detail": "未引用上下文中的关键已知信息"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=failed"
+            },
+            {
+              "id": "must_reference",
+              "pass": false,
+              "level": "fail",
+              "detail": "未引用上下文中的关键已知信息"
+            }
+          ],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 复购用户 3304201117840045788\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T03:03:17.076Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T03:03:17.077Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T03:03:17.077Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T03:03:17.077Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T03:04:02.115Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 2,
+            "finalCount": 0,
+            "handoffCount": 2,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "handoff",
+                "draft": "收到～摄像头转不动确实耽误看娃，这事得交给技术客服做排查，确认到底是 App、网络还是设备本身的问题，才能对症处理。我先帮您建好工单，请稍等一下～"
+              },
+              {
+                "turn": 2,
+                "type": "handoff",
+                "draft": "橙子妈咪，辛苦您了！重启和重装App都试过云台还是不动，这大概率不是软件层面的问题了。我现在马上把您的设备情况转给技术支持同事，让他们专项排查一下是云台硬件还是固件的问题，您稍等我帮您加急对接～"
+              },
+              {
+                "turn": 3,
+                "type": "failed"
+              }
+            ]
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 39392,
+          "wallMs": 117184,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply|need_info|handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 重启"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            },
+            {
+              "id": "no_unbacked_final_archived",
+              "pass": true,
+              "level": "fail",
+              "detail": "未回填人工结论 → 库里 isFinal=true 的回复数应为 0，实际 0"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "摄像头点旋转没反应，左右上下都不动，是不是坏了？\n你好，麻烦先断电重启一下设备，再在 App 里重新连一次云台试试～\n断电重启试过了，App 也重装了，云台还是一动不动。\n那现在怎么办\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 复购用户 3304201117840045788\n",
+          "output": {
+            "type": "handoff",
+            "why": "云台完全无响应，断电重启+重装App均已尝试仍无效，属设备故障排查类，命中技术排查触发，需技术专员判定是否硬件问题。",
+            "risk": "中",
+            "acceptance": "断电重启和重装App都试过了云台还是不动，这种情况单靠基础操作已经排查不动了～我这边马上帮你转给技术专员进一步检测，看是电机还是固件的问题，登记好就尽快回复你，麻烦稍等一下！",
+            "fields": [
+              [
+                "买家",
+                "橙子妈咪（evl_r6tuy_bd07_s4，复购用户）"
+              ],
+              [
+                "问题类型",
+                "云台控制异常·技术排查"
+              ],
+              [
+                "买家原话",
+                "断电重启试过了，App也重装了，云台还是一动不动。那现在怎么办"
+              ],
+              [
+                "最近对话",
+                "客服已建议断电重启+重新连接云台，买家反馈均已尝试仍无效，正在追问下一步"
+              ],
+              [
+                "商品/订单",
+                "【4K旗舰】海马爸比4代 AI智能婴儿看护器，订单3304201117840045788，已签收"
+              ],
+              [
+                "已尝试",
+                "断电重启、App重装、重新连接云台，均无效"
+              ],
+              [
+                "当前判断",
+                "云台完全无响应，基础排查已穷尽，疑似电机硬件故障，需技术专员判定"
+              ],
+              [
+                "建议处理人",
+                "技术/售后专员"
+              ],
+              [
+                "待确认",
+                "云台是否完全不动还是偶发；是否摔过/进水等异常；设备固件版本；App其他功能（画面/对讲）是否正常"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T03:05:19.896Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T03:05:19.909Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T03:05:19.909Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T03:05:19.909Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T03:05:59.288Z"
+            }
+          ],
+          "archived": {
+            "replyCount": 3,
+            "finalCount": 0,
+            "handoffCount": 3,
+            "finalFrom": []
+          },
+          "trace": {
+            "turns": [
+              {
+                "turn": 1,
+                "type": "handoff",
+                "draft": "别急～云台转不动我先帮您查清楚是设置还是机器本身的问题，这边马上帮您对接技术同事看看，稍等一下下！"
+              },
+              {
+                "turn": 2,
+                "type": "handoff",
+                "draft": "断电重启和重装App都试过了云台还是不动，看来不是简单重启能解决的～这种情况我帮您直接转技术专员，让专人来判断是不是电机或固件的问题，处理中耽误您看娃了，这边会加急催进度的～"
+              },
+              {
+                "turn": 3,
+                "type": "handoff",
+                "draft": "断电重启和重装App都试过了云台还是不动，这种情况单靠基础操作已经排查不动了～我这边马上帮你转给技术专员进一步检测，看是电机还是固件的问题，登记好就尽快回复你，麻烦稍等一下！"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
