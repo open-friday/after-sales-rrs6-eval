@@ -344,11 +344,39 @@ async function runOnce(sc, si) {
   };
 }
 
+// 一次真实 GLM 生成的墙钟下限：真机 P50≈13s、我的沙箱 P50≈26.5s。
+// 任何 <8s 就 failed 的样本，几乎不可能是"模型答坏了"，而是基础设施——
+// 实测最常见的是 **GLM 429 Rate limit**（我并发起多实例打同一个 key 打出来的）。
+// 后端按 §6.8 不把 429 透给客户端（这是对的），所以客户端**无法区分**"限流"和"真失败"。
+// 于是这里按耗时做保守推定：快速失败 → 退避重试，仍失败才算数。
+//
+// 为什么这不是在放水：429 是**我的跑法**造成的，把它记成 dev 的路由失败，
+// 就是第 4、6 轮那两次"拿自己造的超时去回压 dev"的重演。凡疑似自身问题，先归因到自己。
+const RIG_SUSPECT_MS = 8000;
+const RIG_RETRIES = 2;
+
+async function runOnceGuarded(sc, i) {
+  let r = await runOnce(sc, i);
+  for (let k = 0; k < RIG_RETRIES; k++) {
+    const fast = (r.totalMs ?? r.wallMs ?? 1e9) < RIG_SUSPECT_MS;
+    if (!(r.verdictType === 'failed' && fast)) break;
+    const backoff = 15000 * (k + 1);
+    log(`   ⚠ ${sc.id} 采样 ${i + 1} 疑似跑测环境问题（${r.totalMs}ms 即 failed，真生成不可能这么快；疑似 GLM 429）→ ${backoff / 1000}s 后重试 ${k + 1}/${RIG_RETRIES}`);
+    await new Promise((res) => setTimeout(res, backoff));
+    r = await runOnce(sc, i);
+    r.rigRetried = k + 1;
+  }
+  if (r.verdictType === 'failed' && (r.totalMs ?? 1e9) < RIG_SUSPECT_MS) {
+    r.rigSuspect = true; // 退避后仍快速失败：标记存疑，报告里单列，不直接算 dev 的账
+  }
+  return r;
+}
+
 async function runScenario(sc, n) {
   const samples = [];
   for (let i = 0; i < n; i++) {
     try {
-      const r = await runOnce(sc, i);
+      const r = await runOnceGuarded(sc, i);
       samples.push(r);
       log(`   ${sc.id} 采样 ${i + 1}/${n} → ${r.verdictType ?? r.status} ${r.pass ? '✅' : '❌ ' + r.fails.map((f) => f.id).join(',')} ${r.totalMs ?? r.wallMs}ms${r.fallback?.fallback ? ' ⚠兜底' : ''}`);
     } catch (e) {

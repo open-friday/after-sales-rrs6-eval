@@ -48,24 +48,32 @@ export const BURNED = [
   },
   {
     id: 'HO-02', category: 'boundary', mock: 'm008', holdout: true, burned: true,
-    title: '[留出·已烧] 一线可自查·未见说法（App 闪退）→ 不得转人工',
-    covers: ['AI-02', 'AI-03', 'AC-13'],
-    rationale: '第 3 轮留出集，现已公开 → 降级为回归。与 BD-02 同一条边界（一线可口述指引的 App 问题）。',
+    title: '[留出·已烧·第6轮期望值已反转] App 闪退 → 必须转人工（技术排查）',
+    covers: ['AI-08', 'AC-14'],
+    rationale:
+      '⚠️ **本条的期望值在第 6 轮被上游反转，且反转方向正好打脸我自己。**' +
+      '第 4 版报告里我把它作为「dev 的口径真立住了」的四条证据之一——' +
+      '当时它 5/5 判 direct_reply/need_info，我判**通过**并据此给 dev 记了一功。' +
+      '新版 §6.5 + AI-08 写死：App 排查类命中即人工介入，' +
+      '「只让买家自行尝试但不进入人工介入闭环」是阻断失败。' +
+      '也就是说：**当时那个我判「对」的行为，按今天的 PRD 是阻断失败**。' +
+      '这不是 dev 做错了什么，是判定边界被上游改了。保留本条并翻转期望值，' +
+      '用来验「新口径是否真的覆盖到了这句 dev 早就见过的话」（已烧，只作回归不作泛化证据）。',
     messages: [buyerMsg('你们这个 App 老是闪退，一打开就自己退出去了，根本用不了。')],
-    expect: {
-      allowed: ['direct_reply', 'need_info'],
-      missMustNot: [/订单号|订单编号|型号/],
-    },
+    expect: { allowed: ['handoff'], handoffFull: true },
     samplesOverride: 5,
   },
   {
     id: 'HO-03', category: 'boundary', mock: 'm002', holdout: true, burned: true,
     title: '[留出·已烧·反向探针] 真需查后端（账号封禁）→ 必须转人工，不得硬答',
     covers: ['AI-04', 'AI-05', 'AC-14'],
-    rationale: '第 3 轮反向探针，现已公开 → 降级为回归。「账号违规禁用」需查平台风控，属 PRD §6.5「一线看不到的系统状态」。',
+    rationale:
+      '第 3 轮反向探针，现已公开 → 降级为回归。「账号违规禁用」需查平台风控，属 PRD §6.5「账号异常/订单风控」。' +
+      '第 6 轮收紧：新 §6.5/AI-08 下这条命中即 handoff，need_info 不再是可接受答案' +
+      '（AI-08 阻断失败明列「因缺少截图、设备状态或错误提示而改判需补充信息」）。',
     messages: [buyerMsg('我登录的时候提示账号违规被禁用了，我什么都没干过，这是怎么回事？')],
     expect: {
-      allowed: ['handoff', 'need_info'],
+      allowed: ['handoff'],
       mustNot: [
         /(一定|肯定|保证|马上|立即).{0,6}(解封|恢复|解除)/,
         /(是因为|原因是|肯定是).{0,10}(违规|封禁|禁用)/,
@@ -95,11 +103,11 @@ export const BURNED = [
   },
 ];
 
-/** 第 4 轮新增留出集——本轮泛化结论只采信这一组 */
+/** 第 4 轮的 HO-05..HO-11：已随第 5 版报告公开 → 本轮全部 burned，只作回归 */
 export const FRESH = [
   // ───────── 正向：PRD §6.5 五类「无条件命中即转」，换没见过的说法还认不认得 ─────────
   {
-    id: 'HO-05', category: 'golden', mock: 'm007', holdout: true,
+    id: 'HO-05', burned: true, category: 'golden', mock: 'm007', holdout: true,
     title: '[留出·正向] 投诉·未见说法 → 必须转人工',
     covers: ['AI-04', 'AC-14'],
     rationale:
@@ -113,7 +121,7 @@ export const FRESH = [
     samplesOverride: 5,
   },
   {
-    id: 'HO-06', category: 'golden', mock: 'm005', holdout: true,
+    id: 'HO-06', burned: true, category: 'golden', mock: 'm005', holdout: true,
     title: '[留出·正向] 高风险情绪/施压·不含投诉退款字样 → 必须转人工',
     covers: ['AI-04', 'AC-14'],
     rationale:
@@ -126,7 +134,7 @@ export const FRESH = [
     samplesOverride: 5,
   },
   {
-    id: 'HO-07', category: 'golden', mock: 'm004', holdout: true,
+    id: 'HO-07', burned: true, category: 'golden', mock: 'm004', holdout: true,
     title: '[留出·正向] 责任归因不明 → 必须转人工',
     covers: ['AI-04', 'AC-14'],
     rationale:
@@ -145,7 +153,7 @@ export const FRESH = [
     samplesOverride: 5,
   },
   {
-    id: 'HO-08', category: 'golden', mock: 'm008', holdout: true,
+    id: 'HO-08', burned: true, category: 'golden', mock: 'm008', holdout: true,
     title: '[留出·正向] 赔付诉求·未见说法 → 必须转人工，且不得当场应下',
     covers: ['AI-04', 'AC-14'],
     rationale:
@@ -165,7 +173,7 @@ export const FRESH = [
 
   // ───────── 反向：口径放宽后，低风险咨询会不会被一并卷进 handoff ─────────
   {
-    id: 'HO-09', category: 'boundary', mock: 'm009', holdout: true,
+    id: 'HO-09', burned: true, category: 'boundary', mock: 'm009', holdout: true,
     title: '[留出·反向探针] 低风险功能咨询 + 轻微着急语气 → 不得转人工',
     covers: ['AI-02', 'AC-12'],
     rationale:
@@ -183,25 +191,25 @@ export const FRESH = [
     samplesOverride: 5,
   },
   {
-    id: 'HO-10', category: 'boundary', mock: 'm007', holdout: true,
+    id: 'HO-10', burned: true, category: 'boundary', mock: 'm007', holdout: true,
     title: '[留出·反向探针] 一线可自查技术问题·未见说法 → 不得转人工',
     covers: ['AI-02', 'AI-03', 'AC-13'],
     rationale:
       '**反向探针**：dev 保留了「技术排查」的收窄口径（一线自查 vs 需查后端），' +
       '但这版又把五类改成无条件命中，两条规则可能互相打架。' +
       '「回放卡顿/黑屏」是标准一线自查项（网络/存储卡/App 版本），既不需查后端也无争议，' +
-      '换成 prompt 里没有的说法测口径是否还立得住。首轮 handoff = AI-02「无故转人工」。',
+      '换成 prompt 里没有的说法测口径是否还立得住。' +
+      '⚠️ **第 6 轮期望值反转**：新 §6.5 明写「不再区分一线能不能自查」，' +
+      '「回放卡顿/黑屏」＝设备/App 排查类 → handoff。本条与 HO-02 同属' +
+      '「我上一版判通过、按新 PRD 却是阻断失败」的那一类，翻转后作回归。',
     messages: [buyerMsg('看回放的时候画面一卡一卡的，有时候还直接黑屏，得等半天才恢复。')],
-    expect: {
-      allowed: ['direct_reply', 'need_info'],
-      missMustNot: [/订单号|订单编号|型号/],
-    },
+    expect: { allowed: ['handoff'], handoffFull: true },
     samplesOverride: 5,
   },
 
   // ───────── 口径观察项：不作闸，只摆事实交 PRD 定夺 ─────────
   {
-    id: 'HO-11', category: 'boundary', mock: 'm009', holdout: true, advisory: true,
+    id: 'HO-11', burned: true, category: 'boundary', mock: 'm009', holdout: true, advisory: true,
     title: '[留出·口径观察·不作闸] 纯流程性退货咨询（无争议）→ 该不该转人工？',
     covers: ['AI-02', 'AI-04'],
     rationale:
@@ -218,4 +226,153 @@ export const FRESH = [
   },
 ];
 
-export const HOLDOUT = [...BURNED, ...FRESH];
+/**
+ * ── 第 6 轮新增 HO-12..HO-18：本轮泛化结论只采信这一组 ──
+ *
+ * 为什么必须再换一组：HO-05..HO-11 已随第 5 版报告发布，dev 在 4b0ebdd3 的 commit message 里
+ * 逐条引用（「新留出 HO-05..HO-11 全过」）。已发布即已烧。
+ *
+ * 本轮要测的边界跟前几轮**不是同一条**：上游 PRD a5142fd2 → 36854cf0 重写了 §6.5，
+ * 新增 AI-08（技术排查 → 必须转人工）与 AI-09（纯流程咨询 → 必须直接回复），
+ * 且明写「技术排查不再区分一线能不能自查」。dev 照着新口径重写了 promptBuilder，
+ * 里面举了这些例子（**全部回避，不得复用**）：
+ *   handoff 侧：「App 一直提示离线」「登录一直异常」「云台不动」「内存卡识别不到」「智能提醒没生效」
+ *   例外侧：「家庭共享怎么设置」「设置入口在哪」「能否远程看」「七天无理由怎么申请」
+ *   词表：「投诉/曝光/12315/找媒体/举报」「赔偿、补偿、损失索赔」「你们别再拖了」
+ *
+ * 新口径的两个方向风险，同样必须配对测：
+ *   正向 HO-12..HO-15：技术排查换没见过的说法，还认得出来吗？（认不出 = AI-08 只是把 PRD 例句抄进 prompt）
+ *   反向 HO-16..HO-18：口径大幅收紧后，真正该直接回复的会不会被一起卷走？
+ *                      （会 = 撞 AI-02/AI-09「无故转人工」——这正是 R-4 的镜像风险，
+ *                        上一轮 dev 是收紧 handoff 收出的祸，这一轮 PRD 让他大幅放宽 handoff，
+ *                        祸就该出在另一头）
+ */
+export const FRESH2 = [
+  // ───────── 正向：AI-08 技术排查，换 dev 没见过的说法 ─────────
+  {
+    id: 'HO-12', category: 'golden', mock: 'm009', holdout: true,
+    title: '[留出·正向] 技术排查·未见说法（配网转圈超时）→ 必须转人工',
+    covers: ['AI-08', 'AC-14'],
+    rationale:
+      '新 §6.5/AI-08：设备/App 排查类命中即 handoff。本条**刻意避开** dev prompt 里的五个例子' +
+      '（离线/登录异常/云台不动/内存卡识别不到/智能提醒没生效），改用「扫码添加设备一直转圈、' +
+      '最后提示超时」——同一条边界（设备配网故障），说法 dev 没见过。' +
+      '底层 m009（功能咨询 / risk=[] / 普通咨询）：**页面标签帮不上忙**，判定信号只能来自这句话。' +
+      '若判 direct_reply（教买家重扫）或 need_info（问路由器型号）＝ AI-08 阻断失败' +
+      '（「只让买家自行尝试但不进入人工介入闭环」/「因缺少错误提示而改判需补充信息」）。',
+    messages: [buyerMsg('按说明书扫码添加设备，进度条一直转圈，转到最后就提示超时，试了好几遍都这样。')],
+    expect: { allowed: ['handoff'], handoffFull: true },
+    samplesOverride: 5,
+  },
+  {
+    id: 'HO-13', category: 'golden', mock: 'm009', holdout: true,
+    title: '[留出·正向] 技术排查·缺截图/错误提示 → 仍必须转人工，不得改判需补充信息',
+    covers: ['AI-08', 'AC-14', 'AC-13'],
+    rationale:
+      '**这条专打 AI-08 里最容易被做错的那一句**：「技术排查同时缺少截图、设备状态、错误提示或' +
+      '操作记录时，**仍判定为需人工介入**；缺失项应写入内部交接摘要的待确认问题…' +
+      '**不得因此改判为需补充信息**」。' +
+      '买家描述极模糊（「反正就是用不了」）＋无截图＋无错误码——这正是模型最想追问的形状，' +
+      '也是旧版 PRD 会判 need_info 的形状（旧 AC-13 的样本就是它，第 13 版 PRD 专门换掉了）。' +
+      '期望 handoff，且缺失项应出现在交接摘要的「待确认」里而不是 missing[]。' +
+      '判 need_info ＝ AI-08 阻断失败，**且是新旧 PRD 之间最可能残留的一处惯性**。',
+    messages: [buyerMsg('这个东西装上以后反正就是用不了，我也说不清楚，你们看着办吧。')],
+    expect: { allowed: ['handoff'], handoffFull: true },
+    samplesOverride: 5,
+  },
+  {
+    id: 'HO-14', category: 'golden', mock: 'm004', holdout: true,
+    title: '[留出·正向] 支付/退款流水排查·未见说法 → 必须转人工',
+    covers: ['AI-08', 'AC-14'],
+    rationale:
+      '新 §6.5 的排查类里含「支付/退款流水」「订单风控」，这两项我历史上**从未测过**' +
+      '（前五轮的技术排查样本全是设备/App 类）。' +
+      '本条是纯流水核对：钱扣了两次、订单只有一个——一线看不到支付流水，必须转。' +
+      '注意与「退款争议」区分：买家没有对金额/责任表达分歧或要求改判，他只是陈述异常，' +
+      '所以命中的是 (a) 技术排查而非 (b) 退款争议——两条都通向 handoff，本条不依赖区分。' +
+      '若 direct_reply 给出「已为你核实是重复扣款，会退回」＝编造平台动作。',
+    messages: [buyerMsg('我这边银行短信显示扣了两笔钱，但订单只有一个，你们帮我看看这是怎么回事。')],
+    expect: {
+      allowed: ['handoff'],
+      handoffFull: true,
+      mustNot: [/(已|已经).{0,6}(为你|帮你).{0,4}(核实|确认).{0,10}(重复|多)扣/, /(一定|保证|肯定).{0,4}(退回|退还)/],
+    },
+    samplesOverride: 5,
+  },
+  {
+    id: 'HO-15', category: 'golden', mock: 'm006', holdout: true,
+    title: '[留出·正向·riskTags 优先级] 页面已标「情绪较高」+ 买家原话平静 → 仍必须转人工',
+    covers: ['AI-04', 'AC-14'],
+    rationale:
+      '**R-5 的正向配对探针**。R-5 是「不该有的情绪信号被造出来」（首次售后 → 高情绪）；' +
+      '这条测反面：**真有的情绪信号会不会被丢掉**。' +
+      'm006 江南小贝的 riskTags 真值＝[情绪较高]（工作台实拉），dev 的新 promptBuilder 写着' +
+      '「riskTags 是运营已打好的最高优先级信号，情绪较高 → 无条件 handoff，**哪怕当轮买家原话很平静**」。' +
+      '故本轮给一句**刻意平静、纯功能性**的原话——若模型跟着原话走判 direct_reply，' +
+      '说明 riskTags 优先级规则没真生效（dev 在 4b0ebdd3 的 v2 补丁正是修这个：「m006 情绪较高被稀释」）。' +
+      '这条同时把 emotion=anxious（着急）与 riskTags=情绪较高 叠在一起，' +
+      '验 dev 那句「仅着急不是高风险，但同时有 riskTags 时以 riskTags 为准」是否真按优先级执行。',
+    messages: [buyerMsg('麻烦问一下，这个提醒的灵敏度在哪里调整？')],
+    expect: { allowed: ['handoff'], handoffFull: true },
+    samplesOverride: 5,
+  },
+
+  // ───────── 反向：AI-09 / §6.5 例外，收紧后别把该直接回复的一起卷走 ─────────
+  {
+    id: 'HO-16', category: 'boundary', mock: 'm009', holdout: true,
+    title: '[留出·反向探针] 纯流程咨询·未见说法（寄回运费谁承担）→ 不得转人工',
+    covers: ['AI-09', 'AI-02'],
+    rationale:
+      '**反向探针，与 HO-12..HO-15 配对**。新 §6.5 大幅放宽了 handoff（7 触发命中即转、' +
+      '技术排查不再分一线自查），镜像风险就是**把纯流程咨询一起卷进去**——' +
+      'AI-09 的阻断失败原文正是「把纯流程性咨询当退款争议无条件转人工」。' +
+      '本条避开 PRD/prompt 里的三个例句（七天无理由怎么申请/寄回地址在哪/邮费规则怎么算），' +
+      '换成「换货寄回来回运费谁出」——同属公开、稳定、低风险的规则咨询，无分歧、无情绪、无改判要求。' +
+      '按 §6.5 应 direct_reply。转人工 ＝ AI-09 阻断失败。',
+    messages: [buyerMsg('如果我要换货的话，来回的运费是你们承担还是我自己出？想先问清楚再决定。')],
+    expect: {
+      allowed: ['direct_reply', 'need_info'],
+      missMustNot: [/订单号|订单编号|型号/],
+    },
+    samplesOverride: 5,
+  },
+  {
+    id: 'HO-17', category: 'boundary', mock: 'm009', holdout: true,
+    title: '[留出·反向探针] 公开操作流程·设备无故障（投屏到电视）→ 不得转人工',
+    covers: ['AI-02', 'AC-12'],
+    rationale:
+      '**反向探针**。§6.5 例外：「若买家只是询问公开、稳定、低风险的操作流程，' +
+      '且不涉及故障排查或责任判断，可按信息是否充分进入可直接回复或需补充信息」。' +
+      '风险在于新口径把「App / 设备」写成 handoff 触发词后，模型可能**见 App 就转**——' +
+      '而这条恰恰是「问 App 怎么用」而不是「App 坏了」，**设备没有任何故障**。' +
+      '避开 prompt 里的例句（家庭共享怎么设置/设置入口在哪/能否远程看），换成「投屏到电视」。' +
+      '与 HO-12 构成最关键的一对：同样是「App + 设备 + 怎么弄」，' +
+      '一个进了故障排查（必须转），一个没进（不得转）。**两条同时过，才叫真的分得清「排查」和「怎么用」**；' +
+      '若 HO-12 过而 HO-17 挂，就是见词转人工，不是判语义。',
+    messages: [buyerMsg('我想把宝宝的画面投到客厅电视上给老人看，这个能实现吗？怎么弄？')],
+    expect: {
+      allowed: ['direct_reply', 'need_info'],
+      missMustNot: [/订单号|订单编号|型号/],
+    },
+    samplesOverride: 5,
+  },
+  {
+    id: 'HO-18', category: 'boundary', mock: 'm002', holdout: true, advisory: true,
+    title: '[留出·口径观察·不作闸] 已签收 + 纯规则咨询，页面分类却是「App 登录」→ 跟谁走？',
+    covers: ['AI-08', 'AI-09'],
+    rationale:
+      '**观察项，不作闸**（理由同 AV-01：PRD 未解决的矛盾不拿来卡 dev）。' +
+      'm002 的页面 problemType＝「App 登录」（技术排查），但买家本轮问的是纯规则问题' +
+      '（保修期怎么算），**与 App 登录毫无关系**。' +
+      '§6.5 的两条规则在这里指向相反：按「页面分类＝排查类」该转，按「本轮买家问题＝公开稳定低风险规则咨询」' +
+      '该直接回复。PRD 没写清楚「命中判定看的是页面分类还是本轮原话」。' +
+      '这条只记录分布：若模型跟页面标签走（handoff），说明 problemType 这个新透传字段' +
+      '正在**盖过买家真实意图**——那是 R-5 的同类病（喂给模型的"事实"不对），' +
+      '值得回压 PRD 补一句「以本轮买家问题为准」。',
+    messages: [buyerMsg('想问下这个保修期是从下单那天算还是从签收那天算？')],
+    expect: { allowed: ['direct_reply', 'need_info', 'handoff'] },
+    samplesOverride: 5,
+  },
+];
+
+export const HOLDOUT = [...BURNED, ...FRESH, ...FRESH2];

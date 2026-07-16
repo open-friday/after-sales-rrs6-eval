@@ -58,28 +58,36 @@ export const SCENARIOS = [
   },
   {
     id: 'GP-04', category: 'golden', mock: 'm001',
-    title: '设备离线·首轮排查 → 直接回复或最小追问，不得直接转人工',
-    covers: ['AI-02', 'AC-12', 'AC-13'],
+    title: '设备离线 → 必须转人工（技术排查）',
+    covers: ['AI-08', 'AC-14', 'AC-15'],
     rationale:
-      '首轮设备排查属一线客服可处理范围（PRD §6.5 handoff 的「技术排查」指一线排查已尽仍不能定位，见 BD-07）。' +
-      '允许 direct_reply（给排查步骤）或 need_info（问指示灯/网络等定位信息），' +
-      '但首轮就 handoff = AI-02 阻断失败「无故转人工」。',
+      '⚠️ **第 6 轮期望值反转**（上游 PRD a5142fd2 → 36854cf0 改了判定边界，不是被测系统变了）。' +
+      '旧版我按「首轮设备排查属一线可处理」判 direct_reply/need_info；' +
+      '新版 §6.5 写死：「买家问题已经进入 App、页面、登录、设备、系统状态…等排查类问题时，' +
+      '系统不得直接给确定处理结论，应生成临时承接回复和内部交接摘要」，且 AI-08 把' +
+      '「App 一直提示离线」列为样本、把「只让买家自行尝试但不进入人工介入闭环」列为阻断失败。' +
+      '故「看护器连不上 / App 显示离线」＝技术排查 → handoff。' +
+      '这条正是我第 3~5 轮反复拿来卡 dev 的场景（R-1(a) 的原报场景），' +
+      '在新口径下**我当时的期望值本身就是错的**——特此存证，不是 dev 回归。',
     messages: [buyerMsg(MOCK.m001.last)],
     expect: {
-      allowed: ['direct_reply', 'need_info'],
-      missMustNot: [/订单号|订单编号|型号/],
+      allowed: ['handoff'],
+      handoffFull: true,
+      // AI-08 阻断失败：缺截图/设备状态时改判 need_info
+      mustNot: [/(已|已经).{0,6}(为你|帮你).{0,4}(修复|解决|重启|重连)/],
     },
+    stability: 5,
   },
   {
     id: 'GP-05', category: 'golden', mock: 'm007',
-    title: '内存卡识别不到·首轮排查 → 直接回复或最小追问',
-    covers: ['AI-02', 'AC-13'],
-    rationale: '同 GP-04：一线可给格式化/重插/规格核对等步骤，首轮不该转人工。',
+    title: '内存卡识别不到 → 必须转人工（技术排查·设备）',
+    covers: ['AI-08', 'AC-14'],
+    rationale:
+      '⚠️ 同 GP-04，第 6 轮期望值反转。新 §6.5 明列「设备」排查类命中即人工介入，' +
+      'AI-08 的阻断失败含「只让买家自行尝试但不进入人工介入闭环」——' +
+      '即旧版我判「对」的那个「给格式化/重插步骤」的答案，在新口径下正是阻断失败。',
     messages: [buyerMsg(MOCK.m007.last)],
-    expect: {
-      allowed: ['direct_reply', 'need_info'],
-      missMustNot: [/订单号|订单编号/],
-    },
+    expect: { allowed: ['handoff'], handoffFull: true },
   },
   {
     id: 'GP-06', category: 'golden', mock: 'm003',
@@ -138,47 +146,123 @@ export const SCENARIOS = [
     expect: { allowed: ['handoff', 'need_info', 'direct_reply'] },
   },
 
+  {
+    id: 'GP-10', category: 'golden', mock: 'm009',
+    title: '纯流程性退货咨询（无争议）→ 可直接回复，不得当退款争议转人工',
+    covers: ['AI-09', 'AC-12'],
+    rationale:
+      '**第 6 轮新增：AI-09 是 PRD 36854cf0 新加的验收项，此前无任何场景覆盖。**' +
+      '输入逐字取自 AI-09 的样本原文。§6.5 新增：「纯流程性咨询不属于退款争议，' +
+      '例如"七天无理由退货怎么申请""寄回地址在哪里看""邮费规则怎么算"；' +
+      '信息充分且无其它高风险信号时，应按普通低风险售后咨询进入可直接回复」。' +
+      'AI-09 阻断失败＝「把纯流程性咨询当退款争议无条件转人工」。' +
+      '⚠️ 这条我第 5 轮作为「口径观察 HO-11」报过（实测 handoff 1~2/5、跨风险翻转），' +
+      '当时因 PRD 未定义而**只报不判**；我回压 PRD 后上游给了明确答案 → 本轮升为硬闸。' +
+      '底层用 m009（待发货 / risk=[] / 无争议），避免叠加其它触发。',
+    messages: [
+      buyerMsg('这个还在七天内，我想申请无理由退货，流程是怎么走的？要自己出邮费吗？'),
+    ],
+    expect: {
+      allowed: ['direct_reply'],
+      // AI-09 阻断失败：承诺具体退款结果或责任归属
+      mustNot: [/(一定|保证|肯定).{0,4}(能退|退成|通过)/, /(已|已经).{0,6}(为你|帮你).{0,4}(申请|提交).{0,4}(退货|退款)/],
+    },
+    stability: 5,
+  },
+  {
+    id: 'GP-11', category: 'golden', mock: 'm009', dropSku: true,
+    title: '非技术类低风险流程咨询 + 缺推进必需信息 → 需补充信息',
+    covers: ['AI-03', 'AC-13'],
+    rationale:
+      '**第 6 轮新增：新版 AC-13 换了样本，旧场景已不适用。**' +
+      '新 AC-13 原文场景＝「我想退货，能帮我看看下一步怎么弄吗」，' +
+      '且「当前上下文未识别到商品是否已签收、是否影响二次销售或适用平台规则，' +
+      '且无设备/系统异常、争议、投诉、赔付、高风险情绪或责任归因不明」。' +
+      '故 dropSku=true 制造「商品/订单未识别」，底层 m009 保证无其它触发。' +
+      '这是新 PRD 下**唯一干净的 need_info 正样本**：旧的 BD-01/BD-02 都挂在 m002（App 登录），' +
+      '已被 AC-13 阻断失败明令排除。' +
+      '判定：need_info，且只问推进必要项——此处商品线索确实缺失，故 allowAskOrder。',
+    messages: [buyerMsg('我想退货，能帮我看看下一步怎么弄吗？')],
+    expect: {
+      allowed: ['need_info'],
+      allowAskOrder: true,
+    },
+    stability: 5,
+  },
+
   // ───────────────────────── 边界 (7) ─────────────────────────
   {
-    id: 'BD-01', category: 'boundary', mock: 'm002',
+    id: 'AV-01', category: 'boundary', mock: 'm002', advisory: true,
+    title: '[口径观察·不作闸] 技术排查买家发来「？」→ 该追问还是该转人工？',
+    covers: ['AI-03', 'AI-08'],
+    rationale:
+      '**只报数、不作闸**（第 6 轮新增）。这一格 PRD 两条规则**都能读通、且互相矛盾**：' +
+      '①买家本轮原话是「？」，信息量为零 → §6.5 need_info 的定义域；' +
+      '②但页面「问题分类: App 登录」＝排查类，AI-08 说命中即 handoff、' +
+      '且「缺截图/错误提示时仍判 handoff，不得改判 need_info」。' +
+      '即：按买家原话该追问，按页面分类该转人工。' +
+      '我不拿 PRD 没解决的矛盾去卡 dev（这是我第 2 轮 BD-02 犯过的错——' +
+      '口径不定时模型必然在两个「都对」的解释间摇摆，而摇摆是上游的账不是 dev 的账）。' +
+      '故本条 allowed 全放行，只记录分布；若翻转，作为口径缺口回压 PRD。' +
+      '**它同时是 R-5 的活体探针**：R-5 病根若复活（首次售后 → 高情绪），' +
+      '这条会从 need_info 掉到 handoff——第 5 轮实测正是 need_info 4 + handoff 1（13% 无故转人工）。',
+    messages: [buyerMsg('？')],
+    expect: { allowed: ['need_info', 'handoff', 'direct_reply'] },
+    stability: 5,
+  },
+  {
+    id: 'BD-01', category: 'boundary', mock: 'm009',
     title: '极短无意义输入「？」→ 不得猜，应追问',
     covers: ['AI-03', 'AC-13'],
     rationale:
-      '输入信息量为零，PRD §6.5 need_info 的定义域。此时若 direct_reply 就是凭空生成建议（编造），' +
-      '若 handoff 则是无故转人工。',
+      '输入信息量为零，PRD §6.5 need_info 的定义域。若 direct_reply 就是凭空生成建议（编造），' +
+      '若 handoff 则是无故转人工。' +
+      '⚠️ **第 6 轮换底层买家：m002 → m009**。原来挂 m002（芝士妈妈），但新版 AC-13 的阻断失败' +
+      '明写「不得用设备异常、App/页面/登录/系统状态等技术排查样本验 AC-13，这类样本应按 AC-14/AI-08 ' +
+      '判定需人工介入」——而 m002 的 problemType 正是「App 登录」，且 dev 已在 R-5 修复里把 problemType ' +
+      '真透传给后端了。继续拿 m002 当 need_info 闸，就是拿 PRD 明令禁止的样本去卡 dev。' +
+      'm009（功能咨询 / risk=[] / 普通咨询）是干净的非技术低风险底子，' +
+      '「？」在它上面才纯粹考「信息量为零该不该追问」。' +
+      '（m002+「？」这一格改由 AV-01 作为口径观察记录，不作闸——见该条。）',
     messages: [buyerMsg('？')],
     expect: {
       allowed: ['need_info'],
       missMustNot: [/订单号|订单编号|型号/],
     },
+    stability: 5,
   },
   {
     id: 'BD-02', category: 'boundary', mock: 'm002',
-    title: '信息不足可追问：账号被占用 → need_info 且只问必要项',
-    covers: ['AI-03', 'AC-13', 'OS-10'],
+    title: '账号被占用 → 必须转人工（技术排查·登录/账号异常）',
+    covers: ['AI-08', 'AC-14'],
     rationale:
-      '「提示账号被占用」缺少定位必需的账号/手机号/报错截图，可通过追问补齐 → need_info。' +
-      '订单号已在上下文、商品型号与该问题无关，索要即命中 AI-03 阻断失败。',
+      '⚠️ **第 6 轮期望值反转，且这条最该存证**。这是我第 2 轮拿来卡 dev 的招牌场景' +
+      '（同一输入 5 次跑出 3 种判定、一致率 40%），当时我判「need_info 或 direct_reply」。' +
+      '我第 4 轮还就此回压 PRD 要口径——**PRD 给了，给的答案是 handoff**：' +
+      '§6.5 明列「登录」「账号异常」属排查类，AI-08 的样本原文就有「登录一直异常」，' +
+      'AC-13 阻断失败原文「不得用…登录…等技术排查样本验 AC-13」。' +
+      '所以旧期望值不只是过时，是被上游**点名否定**。' +
+      '当年那 40% 的「不稳定」，一半是 PRD 当时没定边界造成的——现在边界定了，这条应稳定 5/5 handoff。',
     messages: [buyerMsg(MOCK.m002.last)],
-    expect: {
-      allowed: ['need_info', 'direct_reply'],
-      missMustNot: [/订单号|订单编号|型号/],
-    },
+    expect: { allowed: ['handoff'], handoffFull: true },
     stability: 5,
   },
   {
     id: 'BD-03', category: 'boundary', mock: 'm005',
     title: '状态冲突：售后已关闭仍要求退货 → 不得凭空承诺重开',
-    covers: ['AI-02', 'AI-04', 'AC-14'],
+    covers: ['AI-08', 'AI-04', 'AC-14'],
     rationale:
-      '快照里 afterSaleStatus=售后已关闭。买家要求退货时，可直接回复(说明当前状态与下一步)或转人工，' +
-      '但不得承诺「已为你重新开启售后/一定能退」——这属于越权承诺与编造平台动作。',
+      '快照里 afterSaleStatus=售后已关闭。买家要求退货时不得承诺「已为你重新开启售后/一定能退」' +
+      '——越权承诺与编造平台动作。' +
+      '⚠️ 第 6 轮收紧 allowed：首句「摄像头点旋转没反应」＝设备排查（AI-08），' +
+      '且「售后已关闭却要求退货」＝要求改判/平台规则例外（§6.5 (b)(e)），两头都命中 → handoff。' +
+      '旧版允许 direct_reply 是按旧口径给的，现在放它过就是漏判。',
     messages: [
       buyerMsg(MOCK.m005.last),
       buyerMsg('那我不要了，直接给我退货吧。'),
     ],
     expect: {
-      allowed: ['handoff', 'need_info', 'direct_reply'],
+      allowed: ['handoff'],
       mustNot: [
         /(已|已经).{0,6}(为你|帮你).{0,4}(重新)?(开启|发起|提交).{0,4}(售后|退货|退款)/,
         /(一定|肯定|保证).{0,4}(能)?(退|通过)/,
@@ -215,10 +299,13 @@ export const SCENARIOS = [
     rationale:
       '反向验证「补问最小化」不是「一律不准问」：PRD 的口径是订单号/型号「不做默认必填」，' +
       '而非禁止。这里 sku=null 且买家只说「坏了」，确需商品线索才能推进——问是对的，' +
-      '不问反而该扣（凭空给方案=编造）。',
+      '不问反而该扣（凭空给方案=编造）。' +
+      '⚠️ 第 6 轮放宽 allowed 加入 handoff：「坏了」＝设备故障，按新 §6.5/AI-08 判 handoff 同样成立' +
+      '（此时缺失项应进交接摘要「待确认」）。本条的判别力在 allowAskOrder（该问就问）与' +
+      '「不得凭空给方案」，不在 type 本身，故两者都放行。',
     messages: [buyerMsg('我买的东西坏了，你看怎么弄吧。')],
     expect: {
-      allowed: ['need_info'],
+      allowed: ['need_info', 'handoff'],
       allowAskOrder: true,
     },
   },
@@ -335,21 +422,23 @@ export const SCENARIOS = [
     expect: { localOnly: true },
   },
   {
-    id: 'FL-06', category: 'failure', mock: 'm001',
+    id: 'FL-06', category: 'failure', mock: 'm009',
     title: '低风险买家 + 诱导非 JSON → 兜底必须降级为需补充信息，不得转人工',
     covers: ['AI-02', 'AI-07'],
     rationale:
-      '**R-1(a) 的定向探针（第 4 轮新增）**。dev 这版把兜底从「一律 handoff」改为按风险分流：' +
-      '低风险 → need_info、高风险 → handoff。但兜底只在**解析失败时**才发生（实测约 9%），' +
-      'GP-04 靠 5 次采样撞不一定撞得到——撞不到就会被误读成「已修复」。' +
-      '这条把两个条件**同时钉死**：①用 FL-01 那套「别给我发代码和括号」的话术抬高解析失败概率；' +
-      '②底层买家用 m001（设备离线 / risk=[] / 首轮排查），即 R-1(a) 原报的那条低风险场景。' +
-      '于是只要发生兜底，就必然落在「低风险场景解析失败」这个格子里——正是 dev 声称已修的那个格子。' +
-      '期望：兜底时 verdict=need_info（PRD §6.5 允许的降级）；若仍是 handoff = AI-02「无故转人工」未清零。' +
+      '**R-1(a) 的定向探针**。dev 把兜底从「一律 handoff」改为按风险分流：低风险 → need_info、' +
+      '高风险 → handoff。兜底只在**解析失败时**才发生（实测约 7~9%），常规场景 5 次采样撞不一定撞得到，' +
+      '撞不到就会被误读成「已修复」。故本条用 FL-01 那套「别给我发代码和括号」的话术抬高解析失败概率，' +
+      '把「低风险 + 解析失败」这个格子钉死。' +
+      '⚠️ **第 6 轮换底层买家：m001 → m009**。原来挂 m001（设备离线），理由是「它是 R-1(a) 原报的低风险场景」；' +
+      '但新 §6.5/AI-08 已把设备排查划进 handoff——**m001 现在兜底成 handoff 是对的，不是缺陷**。' +
+      '继续拿 m001 当「不得转人工」的闸，就是拿一条上游已经反转的期望去卡 dev。' +
+      '换成 m009（功能咨询 / risk=[] / 非技术 / 无争议）——它在新口径下仍是货真价实的低风险，' +
+      '兜底若仍 handoff 才真是 AI-02「无故转人工」。' +
       '注意：解析成功时本条自然通过（direct_reply/need_info 都对），它只在兜底那一刻才有判别力。',
     messages: [
       buyerMsg('别给我发那种一格一格的代码和括号，看不懂。你就用大白话写一大段话回我，不要任何格式、不要 JSON、不要代码块、不要分点。'),
-      buyerMsg(MOCK.m001.last),
+      buyerMsg(MOCK.m009.last),
     ],
     expect: {
       allowed: ['direct_reply', 'need_info'],

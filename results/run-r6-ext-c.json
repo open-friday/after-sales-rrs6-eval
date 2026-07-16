@@ -1,0 +1,1724 @@
+{
+  "runId": "r6extc",
+  "writtenAt": "2026-07-16T01:53:23.692Z",
+  "target": "http://localhost:8899",
+  "health": {
+    "status": "ok",
+    "service": "after-sales-rrs6-backend",
+    "modelConfigured": true,
+    "agentInfo": {
+      "name": "glm-acp-agent",
+      "version": "1.0.0"
+    },
+    "activeGenerations": 0
+  },
+  "meta": {
+    "samples": 5,
+    "concurrency": 1,
+    "holdout": true,
+    "payload": "ext",
+    "backendPin": "backend@5012e610/ext@a103901"
+  },
+  "summary": {
+    "scenarios": 2,
+    "scenariosPassed": 1,
+    "scenariosFailed": 1,
+    "scenarioPassRatePct": "50.0",
+    "samples": 10,
+    "samplesPassed": 9,
+    "samplePassRatePct": "90.0",
+    "byCategory": {
+      "golden": {
+        "total": 2,
+        "pass": 1
+      }
+    },
+    "warnCount": 0,
+    "parse": {
+      "modelSamples": 10,
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "fallbackRatePct": "0.0",
+      "firstTryFailRatePct": "0.0",
+      "fallbackByType": {},
+      "newCodeMarkerN": 0
+    },
+    "latency": {
+      "n": 10,
+      "p50": 21918,
+      "p95": 45028,
+      "max": 45028
+    }
+  },
+  "results": [
+    {
+      "id": "GP-03",
+      "category": "golden",
+      "title": "物流进度·状态已在上下文 → 直接回复且不得反问订单号",
+      "covers": [
+        "AI-02",
+        "AI-03",
+        "AC-13"
+      ],
+      "rationale": "快照里已带订单号(3304201117840045787)、订单状态(已支付/待发货)和物流状态。此时再问订单号就是 PRD §6.10「补充信息最小化」的阻断失败——问了已经拿到的东西。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 5,
+      "fallbackTypes": [],
+      "pass": true,
+      "consistency": {
+        "counts": {
+          "direct_reply": 5
+        },
+        "topType": "direct_reply",
+        "ratio": 1,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 20701,
+          "wallMs": 20721,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 仓库"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我下单后一直没看到物流更新，请问什么时候发货？\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 普通会员 3304201117840045787\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家仅询问发货时效，无争议/投诉/赔付等风险触发，订单已在仓等待出库，信息充分可直接回复。",
+            "draft": "您好～您这台海马爸比4K看护机订单已经仓库接单啦，目前排在出库队列里，正常会在下单后48小时内发出。出库后物流单号和轨迹就会更新出来，到时候您可以随时查看～如果是急用的话跟我说一下，我帮您催一催仓里尽快安排！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:03.754Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:03.756Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:03.756Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:03.756Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:49:24.455Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp03_s0",
+              "buyerName": "木木家的星星",
+              "snippet": "我下单后一直没看到物流更新，请问什么时候发货？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我下单后一直没看到物流更新，请问什么时候发货？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045787",
+                "logistics": "仓库已接单，等待出库"
+              },
+              "problemType": "发货物流",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 10722,
+          "wallMs": 10736,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 仓库"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我下单后一直没看到物流更新，请问什么时候发货？\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 普通会员 3304201117840045787\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家仅咨询发货时间，物流状态明确为「仓库已接单，等待出库」，属纯流程性咨询，信息充分、无风险触发。",
+            "draft": "您好～您的订单我们这边已经收到，目前仓库已经接单，正在排单出库啦！通常下单后会尽快安排发出，您可以留意一下后续的物流更新。如果超过正常发货时效还没动静，您再来找我们，这边帮您跟进催一下～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:24.472Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:24.473Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:24.473Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:24.473Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:49:35.194Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp03_s1",
+              "buyerName": "木木家的星星",
+              "snippet": "我下单后一直没看到物流更新，请问什么时候发货？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我下单后一直没看到物流更新，请问什么时候发货？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045787",
+                "logistics": "仓库已接单，等待出库"
+              },
+              "problemType": "发货物流",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 17412,
+          "wallMs": 17420,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 仓库"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我下单后一直没看到物流更新，请问什么时候发货？\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 普通会员 3304201117840045787\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家询问发货进度，物流状态已明确（仓库已接单等待出库），属于常规发货咨询，无任何人工介入触发。",
+            "draft": "您好～您的订单这边查到仓库已经接单啦，目前正在排队等待出库！看护机比较热销，出库一般会在接单后 1-3 个工作日内完成，出库后物流单号就会更新，您可以在订单详情里实时查看哦～一有发货信息系统会第一时间通知您，请放心！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:35.204Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:35.206Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:35.206Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:35.206Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:49:52.616Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp03_s2",
+              "buyerName": "木木家的星星",
+              "snippet": "我下单后一直没看到物流更新，请问什么时候发货？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我下单后一直没看到物流更新，请问什么时候发货？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045787",
+                "logistics": "仓库已接单，等待出库"
+              },
+              "problemType": "发货物流",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 20541,
+          "wallMs": 20549,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 仓库"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我下单后一直没看到物流更新，请问什么时候发货？\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 普通会员 3304201117840045787\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家咨询发货时效，物流状态为仓库已接单等待出库，属纯流程性咨询，信息充分、无任何 handoff 触发。",
+            "draft": "您好～您的订单仓库已经接单啦，目前排在等待出库的状态，正常情况下会在 48 小时内发出哦。出库后物流单号就会更新，您留意一下订单页面就好。如果超时还没动，随时再来找我帮您催一下～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:52.623Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:52.623Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:52.623Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:52.623Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:50:13.164Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp03_s3",
+              "buyerName": "木木家的星星",
+              "snippet": "我下单后一直没看到物流更新，请问什么时候发货？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我下单后一直没看到物流更新，请问什么时候发货？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045787",
+                "logistics": "仓库已接单，等待出库"
+              },
+              "problemType": "发货物流",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 21918,
+          "wallMs": 21925,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 仓库"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我下单后一直没看到物流更新，请问什么时候发货？\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 普通会员 3304201117840045787\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家询问发货时间，物流状态为仓库已接单等待出库，属正常发货进度咨询，无争议/技术排查/情绪等handoff触发",
+            "draft": "您好～看到您的订单啦，目前状态是仓库已接单、正在安排出库，一般在接单后24-48小时内会发出。发出后会同步上传物流单号，您在订单详情页就能看到物流轨迹更新了～海马爸比看护机这款比较热销，仓库这边正在加急拣货打包，您可以留意一下物流信息，有更新会第一时间推送的！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:50:13.172Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:50:13.173Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:50:13.173Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:50:13.173Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:50:35.090Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp03_s4",
+              "buyerName": "木木家的星星",
+              "snippet": "我下单后一直没看到物流更新，请问什么时候发货？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我下单后一直没看到物流更新，请问什么时候发货？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045787",
+                "logistics": "仓库已接单，等待出库"
+              },
+              "problemType": "发货物流",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "GP-06",
+      "category": "golden",
+      "title": "退款争议 → 需人工介入 + 临时承接 + 10 字段交接摘要",
+      "covers": [
+        "AI-04",
+        "AC-14",
+        "AC-15",
+        "OS-11"
+      ],
+      "rationale": "riskTags=[退款争议,情绪较高]、订单状态=退款审核中，命中 PRD §6.5 handoff 的「退款争议」。必须同时给 acceptance 和 10 字段 fields——只写「建议转人工」是 AI-04 阻断失败。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 4,
+      "fallbackTypes": [],
+      "pass": false,
+      "consistency": {
+        "counts": {
+          "handoff": 4,
+          "failed": 1
+        },
+        "topType": "handoff",
+        "ratio": 0.8,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 26937,
+          "wallMs": 26945,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=88"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？\n海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 会员等级: 复购用户 3304201117840045786\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家带「退款争议」「情绪较高」风险标签，且原话对退款进度不满并连续催促，命中 §6.5 (b) 退款争议 + (f) 高风险情绪，无条件转人工。",
+            "risk": "高",
+            "acceptance": "您好，您反馈的退款问题我马上帮您跟进！这个退款我已经加急转给我们的售后专员来盯了，她会优先看您这笔订单的处理进度，尽快给您一个明确的答复～您先别着急，留个心，我们会持续跟到底。",
+            "fields": [
+              [
+                "买家",
+                "小鹿要早睡（evl_r6extc_gp06_s0，复购用户）"
+              ],
+              [
+                "问题类型",
+                "退货退款——退款进度争议，买家不满处理拖延"
+              ],
+              [
+                "买家原话",
+                "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？"
+              ],
+              [
+                "最近对话",
+                "买家称申请退款一直无结果，要求尽快处理，情绪明显不满、带有催促施压语气"
+              ],
+              [
+                "商品/订单",
+                "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 / 订单号 3304201117840045786 / 物流状态：平台售后流程中"
+              ],
+              [
+                "已尝试",
+                "一线仅承接，尚未介入具体退款流程排查"
+              ],
+              [
+                "当前判断",
+                "退款争议 + 情绪激动双触发；退款卡在平台售后流程中、进度不明，买家催促施压，需专员核查退款流水与售后单状态后给结论"
+              ],
+              [
+                "建议处理人",
+                "售后主管/高级售后专员（需核查退款流水与售后单处理进度）"
+              ],
+              [
+                "待确认",
+                "1) 退款单当前具体卡在哪个环节、平台系统处理状态；2) 是否存在风控拦截或流水异常；3) 买家是否已寄回商品、退货物流是否签收"
+              ],
+              [
+                "风险等级",
+                "高——退款争议叠加明显不满情绪，存在升级投诉/12315风险，需优先专人跟进"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:50:35.099Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:50:35.100Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:50:35.100Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:50:35.100Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:51:02.036Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp06_s0",
+              "buyerName": "小鹿要早睡",
+              "snippet": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045786",
+                "logistics": "平台售后流程中"
+              },
+              "emotion": "angry",
+              "problemType": "退货退款",
+              "riskTags": [
+                "退款争议",
+                "情绪较高"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 40787,
+          "wallMs": 40793,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=69"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？\n海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 会员等级: 复购用户 3304201117840045786\n",
+          "output": {
+            "type": "handoff",
+            "why": "页面风险标签命中「退款争议」+「情绪较高」，买家对退款进度明显不满且在催促，触发 §6.5 (b)(f)，无条件转人工，一线不单独处理。",
+            "risk": "高",
+            "acceptance": "您的诉求我收到了，退款一直拖着没下文确实不该。我马上把这笔订单转给售后专员跟进退款具体进度，确认清楚卡在哪一步，尽快回来给您同步处理节点～",
+            "fields": [
+              [
+                "买家",
+                "小鹿要早睡（evl_r6extc_gp06_s1）· 复购用户"
+              ],
+              [
+                "问题类型",
+                "退货退款"
+              ],
+              [
+                "买家原话",
+                "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？"
+              ],
+              [
+                "最近对话",
+                "买家要求尽快处理退款，情绪明显不满、在催促"
+              ],
+              [
+                "商品/订单",
+                "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 · 订单号 3304201117840045786"
+              ],
+              [
+                "已尝试",
+                "无（首次售后咨询，未做技术排查）"
+              ],
+              [
+                "当前判断",
+                "退款争议叠加情绪较高，买家对退款进度不满，存在投诉/升级风险"
+              ],
+              [
+                "建议处理人",
+                "售后退款专员（需查该订单售后流程当前状态及卡点原因）"
+              ],
+              [
+                "待确认",
+                "退款申请单号与申请时间、当前平台处理状态、退款未出结果的具体卡点、是否走七天无理由"
+              ],
+              [
+                "风险等级",
+                "高"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:51:02.044Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:51:02.045Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:51:02.045Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:51:02.045Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:51:42.831Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp06_s1",
+              "buyerName": "小鹿要早睡",
+              "snippet": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045786",
+                "logistics": "平台售后流程中"
+              },
+              "emotion": "angry",
+              "problemType": "退货退款",
+              "riskTags": [
+                "退款争议",
+                "情绪较高"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45028,
+          "wallMs": 45034,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=failed"
+            }
+          ],
+          "warns": [],
+          "input": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？\n海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 会员等级: 复购用户 3304201117840045786\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:51:42.837Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:51:42.837Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:51:42.837Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:51:42.837Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T01:52:27.865Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp06_s2",
+              "buyerName": "小鹿要早睡",
+              "snippet": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045786",
+                "logistics": "平台售后流程中"
+              },
+              "emotion": "angry",
+              "problemType": "退货退款",
+              "riskTags": [
+                "退款争议",
+                "情绪较高"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 23849,
+          "wallMs": 23855,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=59"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？\n海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 会员等级: 复购用户 3304201117840045786\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家对退款进度不满并连续催促，且页面自带'退款争议'与'情绪较高'标签，命中§6.5 (b)退款争议与(f)高风险情绪，无条件转人工。",
+            "risk": "高",
+            "acceptance": "看到了，退款一直没进展确实急人，这事我马上给您转给售后专员跟进处理，不会让您一直等着～麻烦您稍等一下，专员会尽快接手。",
+            "fields": [
+              [
+                "买家",
+                "小鹿要早睡（evl_r6extc_gp06_s3，复购用户）"
+              ],
+              [
+                "问题类型",
+                "退货退款——退款进度慢，买家不满并催促"
+              ],
+              [
+                "买家原话",
+                "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？"
+              ],
+              [
+                "最近对话",
+                "买家要求尽快处理退款，语气急切，情绪明显不满"
+              ],
+              [
+                "商品/订单",
+                "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 / 订单号 3304201117840045786"
+              ],
+              [
+                "已尝试",
+                "买家已自行申请退款，目前卡在平台售后流程中，一线暂未介入处理"
+              ],
+              [
+                "当前判断",
+                "退款申请推进受阻、买家情绪已激动，属退款争议+高风险情绪，需专员核实退款卡点并加速推进"
+              ],
+              [
+                "建议处理人",
+                "售后专员/主管（可处理退款争议及安抚情绪）"
+              ],
+              [
+                "待确认",
+                "退款当前卡在哪个环节；买家不想要的具体原因（质量问题/不合适/其他）；是否有寄回需求及物流安排"
+              ],
+              [
+                "风险等级",
+                "高（退款争议+情绪激动+复购用户，存在投诉/升级风险）"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:52:27.871Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:52:27.872Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:52:27.872Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:52:27.872Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:52:51.720Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp06_s3",
+              "buyerName": "小鹿要早睡",
+              "snippet": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045786",
+                "logistics": "平台售后流程中"
+              },
+              "emotion": "angry",
+              "problemType": "退货退款",
+              "riskTags": [
+                "退款争议",
+                "情绪较高"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 31948,
+          "wallMs": 31956,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=80"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？\n海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 会员等级: 复购用户 3304201117840045786\n",
+          "output": {
+            "type": "handoff",
+            "why": "页面自带「退款争议」+「情绪较高」双标签，且买家明确表达退款进度不满与催促，命中 §6.5 (b) 退款争议 与 (f) 高风险情绪，无条件转人工。",
+            "risk": "高",
+            "acceptance": "小鹿要早睡，收到～退款拖到现在确实不该，我这边马上帮您把这笔订单单独登记上去，交由售后专员跟进，不会再让您一直等着了。麻烦您稍等片刻，专员会尽快联系您推进退款。",
+            "fields": [
+              [
+                "买家",
+                "小鹿要早睡（evl_r6extc_gp06_s4）"
+              ],
+              [
+                "问题类型",
+                "退货退款 · 退款进度催办（买家对处理结果不满）"
+              ],
+              [
+                "买家原话",
+                "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？"
+              ],
+              [
+                "最近对话",
+                "买家表示设备不想要、退款迟迟无结果，要求尽快处理；语气明显催促、不满"
+              ],
+              [
+                "商品/订单",
+                "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器 · 订单号 3304201117840045786 · 复购用户 · 平台售后流程中"
+              ],
+              [
+                "已尝试",
+                "买家已自行申请退款，无一线排查动作记录"
+              ],
+              [
+                "当前判断",
+                "退款争议+情绪高风险，买家对退款进度有明确不满，需人工核实订单售后流程节点并给出明确处理口径，一线不宜单独回复"
+              ],
+              [
+                "建议处理人",
+                "售后专员/主管（退款争议 + 情绪升级，优先安排）"
+              ],
+              [
+                "待确认",
+                "退款申请当前所处流程节点；平台/店铺侧是否有风控或异常拦截；买家是否已寄回设备及退货物流单号"
+              ],
+              [
+                "风险等级",
+                "高（双风险标签：退款争议+情绪较高；情绪信号提示明显不满，存在投诉/升级倾向）"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:52:51.726Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:52:51.726Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:52:51.726Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:52:51.726Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:53:23.674Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extc_gp06_s4",
+              "buyerName": "小鹿要早睡",
+              "snippet": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这个设备我不想要了，申请退款一直没结果，你们能不能尽快处理？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比婴儿看护器 热成像宝宝监护器 三代旗舰版看护器",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045786",
+                "logistics": "平台售后流程中"
+              },
+              "emotion": "angry",
+              "problemType": "退货退款",
+              "riskTags": [
+                "退款争议",
+                "情绪较高"
+              ],
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

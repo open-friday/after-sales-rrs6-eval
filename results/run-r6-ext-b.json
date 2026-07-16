@@ -1,0 +1,1683 @@
+{
+  "runId": "r6extb",
+  "writtenAt": "2026-07-16T01:53:40.132Z",
+  "target": "http://localhost:8902",
+  "health": {
+    "status": "ok",
+    "service": "after-sales-rrs6-backend",
+    "modelConfigured": true,
+    "agentInfo": {
+      "name": "glm-acp-agent",
+      "version": "1.0.0"
+    },
+    "activeGenerations": 0
+  },
+  "meta": {
+    "samples": 5,
+    "concurrency": 1,
+    "holdout": true,
+    "payload": "ext",
+    "backendPin": "backend@5012e610/ext@a103901"
+  },
+  "summary": {
+    "scenarios": 2,
+    "scenariosPassed": 2,
+    "scenariosFailed": 0,
+    "scenarioPassRatePct": "100.0",
+    "samples": 10,
+    "samplesPassed": 10,
+    "samplePassRatePct": "100.0",
+    "byCategory": {
+      "golden": {
+        "total": 2,
+        "pass": 2
+      }
+    },
+    "warnCount": 0,
+    "parse": {
+      "modelSamples": 10,
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "fallbackRatePct": "0.0",
+      "firstTryFailRatePct": "0.0",
+      "fallbackByType": {},
+      "newCodeMarkerN": 0
+    },
+    "latency": {
+      "n": 10,
+      "p50": 20873,
+      "p95": 44061,
+      "max": 44061
+    }
+  },
+  "results": [
+    {
+      "id": "GP-02",
+      "category": "golden",
+      "title": "App 设置引导·信息充分 → 可直接回复",
+      "covers": [
+        "AI-02",
+        "AC-12"
+      ],
+      "rationale": "「找不到智能提醒入口」是可直接给操作路径的低风险咨询，商品已知，无需追问。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 5,
+      "fallbackTypes": [],
+      "pass": true,
+      "consistency": {
+        "counts": {
+          "direct_reply": 5
+        },
+        "topType": "direct_reply",
+        "ratio": 1,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 20713,
+          "wallMs": 20736,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "App 里这个设置在哪？我找不到智能提醒的入口。\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 复购用户 3304201117840045791\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家询问智能提醒设置入口位置，属于公开、稳定的操作流程咨询，设备无故障、无异常，信息充分可直接回复",
+            "draft": "智能提醒的入口在 App 里这样找～\n\n打开 App 后，先点底部「我的」页面，找到您绑定的「海马爸比看护机」设备卡片，点进设备详情页，里面有个「智能提醒」或「提醒设置」的选项，点进去就能开关各类提醒（比如翻身提醒、哭声提醒、睡眠提醒等）。\n\n如果设备详情页没直接看到，也可以看看页面右上角有没有「设置」图标⚙️，点进去一般就有提醒相关的设置项。\n\n试试看能不能找到～ 如果跟着操作还是找不到入口，或者点进去发现有开关但没法用，再告诉我，我帮您进一步确认。"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:03.737Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:03.738Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:03.738Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:03.738Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:49:24.450Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp02_s0",
+              "buyerName": "奶糖不甜",
+              "snippet": "App 里这个设置在哪？我找不到智能提醒的入口。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "App 里这个设置在哪？我找不到智能提醒的入口。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045791",
+                "logistics": "已签收"
+              },
+              "problemType": "App 设置",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 41371,
+          "wallMs": 41383,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "App 里这个设置在哪？我找不到智能提醒的入口。\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 复购用户 3304201117840045791\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家询问智能提醒功能入口位置，属于稳定操作流程咨询，设备无故障、无异常、不涉及排查或责任判断，信息充分可直接回复。",
+            "draft": "智能提醒的入口在这儿～进入 App 后，点开您这台看护机的实时画面，右上角有个齿轮（设置）图标，点进去就是设备设置页，往下滑就能看到「智能提醒」啦！里面可以选提醒类型、调灵敏度，按需开关就行。如果点进去还是没找到，截个图发我，我帮您确认一下～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:24.466Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:24.467Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:24.467Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:24.467Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:50:05.837Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp02_s1",
+              "buyerName": "奶糖不甜",
+              "snippet": "App 里这个设置在哪？我找不到智能提醒的入口。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "App 里这个设置在哪？我找不到智能提醒的入口。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045791",
+                "logistics": "已签收"
+              },
+              "problemType": "App 设置",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 30824,
+          "wallMs": 30831,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "App 里这个设置在哪？我找不到智能提醒的入口。\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 复购用户 3304201117840045791\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家询问智能提醒设置入口位置，属稳定的操作流程咨询，设备未出现故障，无任何 handoff 触发命中，信息充分可直接回复",
+            "draft": "智能提醒的入口在 App 设备页面里～ 点进你看护机的实时画面后，右上角有个「设置」（齿轮图标），进去就能看到「智能提醒」选项啦，里面可以开关哭声提醒、翻身提醒、遮脸提醒这些功能。如果点进去之后发现没有这个选项，或者开关了之后提醒没生效，随时跟我说，我帮你排查一下～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:50:05.845Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:50:05.845Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:50:05.845Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:50:05.845Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:50:36.669Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp02_s2",
+              "buyerName": "奶糖不甜",
+              "snippet": "App 里这个设置在哪？我找不到智能提醒的入口。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "App 里这个设置在哪？我找不到智能提醒的入口。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045791",
+                "logistics": "已签收"
+              },
+              "problemType": "App 设置",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 15123,
+          "wallMs": 15131,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "App 里这个设置在哪？我找不到智能提醒的入口。\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 复购用户 3304201117840045791\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家询问智能提醒功能的设置入口位置，属于公开操作流程咨询，无故障/异常/争议，信息充分可直接引导",
+            "draft": "智能提醒的入口在这儿～打开 App 进入看护机页面，点右上角的「设置」图标（齿轮状），往下滑找到「智能提醒」就能看到所有提醒项的开关啦，比如哭声提醒、翻身提醒、区域检测这些都可以在里面单独开关和调灵敏度。如果进去之后没看到这个选项，可能是 App 版本比较旧，去应用商店更新一下再看～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:50:36.676Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:50:36.677Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:50:36.677Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:50:36.677Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:50:51.799Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp02_s3",
+              "buyerName": "奶糖不甜",
+              "snippet": "App 里这个设置在哪？我找不到智能提醒的入口。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "App 里这个设置在哪？我找不到智能提醒的入口。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045791",
+                "logistics": "已签收"
+              },
+              "problemType": "App 设置",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 30540,
+          "wallMs": 30548,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "App 里这个设置在哪？我找不到智能提醒的入口。\n海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿 会员等级: 复购用户 3304201117840045791\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家咨询智能提醒功能入口位置，属公开操作流程指引，设备无故障、无异常、不涉及排查或责任判断，信息可支撑回复",
+            "draft": "智能提醒的入口一般在 App 底部点『我的』→『设置』里能看到，或者进入看护机实时画面后点右上角的设置图标，里面也会有提醒相关的选项，您先按这两条路找找看～要是翻完还是没找到，截一张 App 当前页面的图发我，我帮您定位具体在哪～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:50:51.808Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:50:51.809Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:50:51.809Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:50:51.809Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:51:22.348Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp02_s4",
+              "buyerName": "奶糖不甜",
+              "snippet": "App 里这个设置在哪？我找不到智能提醒的入口。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "App 里这个设置在哪？我找不到智能提醒的入口。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比二代升级版4K看护机 皓日黄高清画质适用多月龄婴儿",
+                "meta": "会员等级: 复购用户",
+                "order": "3304201117840045791",
+                "logistics": "已签收"
+              },
+              "problemType": "App 设置",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "GP-05",
+      "category": "golden",
+      "title": "内存卡识别不到 → 必须转人工（技术排查·设备）",
+      "covers": [
+        "AI-08",
+        "AC-14"
+      ],
+      "rationale": "⚠️ 同 GP-04，第 6 轮期望值反转。新 §6.5 明列「设备」排查类命中即人工介入，AI-08 的阻断失败含「只让买家自行尝试但不进入人工介入闭环」——即旧版我判「对」的那个「给格式化/重插步骤」的答案，在新口径下正是阻断失败。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 5,
+      "fallbackTypes": [],
+      "pass": true,
+      "consistency": {
+        "counts": {
+          "handoff": 5
+        },
+        "topType": "handoff",
+        "ratio": 1,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 44061,
+          "wallMs": 44069,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=90"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "handoff",
+            "why": "内存卡插卡后 App 无法识别、录像回放缺失，属于设备识别/系统状态排查类，命中技术排查触发，需转技术支持跟进。",
+            "risk": "低",
+            "acceptance": "不好意思给您添麻烦了～内存卡识别不到确实影响看回放，这块我马上让技术同事帮您查一下设备状态和卡的情况，稍等我转过去哈～麻烦您先别动卡，稍后可能需要您配合提供一张 App 界面截图。",
+            "fields": [
+              [
+                "买家",
+                "豆包爸爸"
+              ],
+              [
+                "问题类型",
+                "内存卡识别不到，录像回放缺失（技术排查）"
+              ],
+              [
+                "买家原话",
+                "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。"
+              ],
+              [
+                "最近对话",
+                "首次反馈卡已插入但 App 不识别、无回放"
+              ],
+              [
+                "商品/订单",
+                "海马爸比监控专用内存卡 TF存储卡；订单 3304201117840045790，已签收"
+              ],
+              [
+                "已尝试",
+                "已插卡（买家自行操作），App 端仍未识别"
+              ],
+              [
+                "当前判断",
+                "疑似内存卡识别异常或设备/App 侧读取问题，需技术排查"
+              ],
+              [
+                "建议处理人",
+                "技术支持/售后专员"
+              ],
+              [
+                "待确认",
+                "内存卡规格与容量；摄像头型号及固件版本；App 内存储状态截图；插卡方向与卡槽是否正常；卡是否在他机可读"
+              ],
+              [
+                "风险等级",
+                "低"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:51:22.355Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:51:22.356Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:51:22.356Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:51:22.356Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:52:06.416Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp05_s0",
+              "buyerName": "豆包爸爸",
+              "snippet": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 15521,
+          "wallMs": 15528,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=60"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家反映内存卡插入后App无法识别、录像回放无内容，属于设备/App识别排查类，命中技术排查触发(a)，需人工介入。",
+            "risk": "中",
+            "acceptance": "内存卡插了App还是识别不到，确实挺急人的～这种情况我让技术同事帮您查一下卡片识别和录像回放的状态，您稍等我马上转过去!",
+            "fields": [
+              [
+                "买家",
+                "豆包爸爸（普通会员）"
+              ],
+              [
+                "问题类型",
+                "技术排查-内存卡App识别不到、录像回放无内容"
+              ],
+              [
+                "买家原话",
+                "我插了内存卡，但是App里一直识别不到，录像回放也没有。"
+              ],
+              [
+                "最近对话",
+                "买家反馈内存卡已插入但App始终无法识别，录像回放也没有记录"
+              ],
+              [
+                "商品/订单",
+                "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 / 订单号 3304201117840045790 / 已签收"
+              ],
+              [
+                "已尝试",
+                "买家已插入内存卡"
+              ],
+              [
+                "当前判断",
+                "可能是卡片接触不良、不兼容或摄像头识别模块异常，需技术排查具体原因"
+              ],
+              [
+                "建议处理人",
+                "技术支持"
+              ],
+              [
+                "待确认",
+                "摄像头型号及固件版本；内存卡容量与格式（FAT32/exFAT）；App报错提示或截图；是否换卡测试过"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:52:06.424Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:52:06.425Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:52:06.425Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:52:06.425Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:52:21.945Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp05_s1",
+              "buyerName": "豆包爸爸",
+              "snippet": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 20684,
+          "wallMs": 20689,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=102"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家反馈内存卡插入后App识别不到、录像回放无内容，属设备/系统排查类，命中技术排查触发，需人工介入。",
+            "risk": "中",
+            "acceptance": "内存卡插了但App识别不到、回放也看不到，这个我先帮您查一下，别急～麻烦您先发我几张照片：1) 内存卡插在卡槽里的样子；2) App里\"存储/内存卡\"那一页的截图。我这边转给技术同事一起看，尽快给您说法！",
+            "fields": [
+              [
+                "买家",
+                "豆包爸爸（evl_r6extb_gp05_s2，普通会员）"
+              ],
+              [
+                "问题类型",
+                "技术排查-内存卡识别不到/录像回放无内容"
+              ],
+              [
+                "买家原话",
+                "我插了内存卡，但是App里一直识别不到，录像回放也没有。"
+              ],
+              [
+                "最近对话",
+                "买家报内存卡已插入，App仍识别不到，回放无录像"
+              ],
+              [
+                "商品/订单",
+                "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡；订单号 3304201117840045790；已签收"
+              ],
+              [
+                "已尝试",
+                "已插入内存卡"
+              ],
+              [
+                "当前判断",
+                "疑似内存卡不兼容/未正确插入/App读取异常，需技术排查设备状态与卡识别情况"
+              ],
+              [
+                "建议处理人",
+                "技术支持/售后技术"
+              ],
+              [
+                "待确认",
+                "内存卡插入位置照片、App存储页截图、设备型号、是否有报错提示、是否尝试过重新插拔或换卡"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:52:21.951Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:52:21.952Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:52:21.952Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:52:21.952Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:52:42.635Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp05_s2",
+              "buyerName": "豆包爸爸",
+              "snippet": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 36590,
+          "wallMs": 36599,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=173"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家反馈内存卡插入后 App 识别不到、无录像回放，属设备/系统状态排查类，命中技术排查触发，需转技术或主管跟进。",
+            "risk": "中",
+            "acceptance": "豆包爸爸您好～内存卡插进去 App 却识别不到、看不到录像回放，确实挺急的！我先帮您记录下来，马上转给技术同事帮您查一下卡片识别的情况。麻烦您先补几个信息：① 内存卡是买的哪一款、容量多少G；② 插卡时有没有听到'咔'的一声、或者 App 有没有弹过任何提示；③ 方便的话截一张 App 当前'存储/录像'页面的图发给我，这样技术那边能更快定位～",
+            "fields": [
+              [
+                "买家",
+                "豆包爸爸（evl_r6extb_gp05_s3）普通会员"
+              ],
+              [
+                "问题类型",
+                "技术排查——内存卡识别不到、录像回放无"
+              ],
+              [
+                "买家原话",
+                "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。"
+              ],
+              [
+                "最近对话",
+                "2026-07-15 买家反馈插卡后 App 识别不到、无回放"
+              ],
+              [
+                "商品/订单",
+                "海马爸比监控专用内存卡 高速SD卡 TF存储卡 / 订单 3304201117840045790 / 已签收"
+              ],
+              [
+                "已尝试",
+                "买家已插卡，但 App 未识别、无回放（其余未尝试）"
+              ],
+              [
+                "当前判断",
+                "疑似卡片识别/格式化或设备读卡异常，需技术进一步排查"
+              ],
+              [
+                "建议处理人",
+                "技术支持 / 售后技术"
+              ],
+              [
+                "待确认",
+                "内存卡型号容量、插卡是否有提示音/弹窗、App 存储/录像页截图、是否格式化过"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:52:42.641Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:52:42.642Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:52:42.642Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:52:42.642Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:53:19.231Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp05_s3",
+              "buyerName": "豆包爸爸",
+              "snippet": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 20873,
+          "wallMs": 20884,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=80"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。\n海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 会员等级: 普通会员 3304201117840045790\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家反馈内存卡插入后App无法识别、录像回放缺失，属于设备/系统状态排查类技术问题，命中技术排查触发，需转人工介入。",
+            "risk": "中",
+            "acceptance": "豆包爸爸您好～内存卡识别不到、回放看不了确实挺耽误看护的，您先别着急。这种情况需要技术同事帮您查一下卡和设备的识别状态，我这边马上帮您转给技术排查，稍等一下哦!",
+            "fields": [
+              [
+                "买家",
+                "豆包爸爸（普通会员） evl_r6extb_gp05_s4"
+              ],
+              [
+                "问题类型",
+                "技术排查 - 内存卡插入后App识别不到，录像回放缺失"
+              ],
+              [
+                "买家原话",
+                "我插了内存卡，但是App里一直识别不到，录像回放也没有。"
+              ],
+              [
+                "最近对话",
+                "买家首次反馈内存卡识别失败，暂无进一步排查记录"
+              ],
+              [
+                "商品/订单",
+                "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡 / 订单号 3304201117840045790 / 已签收"
+              ],
+              [
+                "已尝试",
+                "买家仅描述已插入内存卡，未说明其它尝试"
+              ],
+              [
+                "当前判断",
+                "疑似卡与设备/App的识别异常或兼容问题，需技术进一步确认根因"
+              ],
+              [
+                "建议处理人",
+                "技术排查岗"
+              ],
+              [
+                "待确认",
+                "监控设备型号、内存卡容量与规格、App内是否报错提示、设备指示灯状态、换卡或重插是否复现"
+              ],
+              [
+                "风险等级",
+                "中"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:53:19.244Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:53:19.246Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:53:19.246Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:53:19.246Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:53:40.117Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6extb_gp05_s4",
+              "buyerName": "豆包爸爸",
+              "snippet": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "我插了内存卡，但是 App 里一直识别不到，录像回放也没有。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "海马爸比监控专用内存卡 摄像头看护器高速SD卡 TF存储卡",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045790",
+                "logistics": "已签收"
+              },
+              "problemType": "录像回放",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

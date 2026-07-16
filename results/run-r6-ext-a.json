@@ -1,0 +1,1655 @@
+{
+  "runId": "r6exta",
+  "writtenAt": "2026-07-16T01:54:07.155Z",
+  "target": "http://localhost:8901",
+  "health": {
+    "status": "ok",
+    "service": "after-sales-rrs6-backend",
+    "modelConfigured": true,
+    "agentInfo": {
+      "name": "glm-acp-agent",
+      "version": "1.0.0"
+    },
+    "activeGenerations": 0
+  },
+  "meta": {
+    "samples": 5,
+    "concurrency": 1,
+    "holdout": true,
+    "payload": "ext",
+    "backendPin": "backend@5012e610/ext@a103901"
+  },
+  "summary": {
+    "scenarios": 2,
+    "scenariosPassed": 1,
+    "scenariosFailed": 1,
+    "scenarioPassRatePct": "50.0",
+    "samples": 10,
+    "samplesPassed": 8,
+    "samplePassRatePct": "80.0",
+    "byCategory": {
+      "golden": {
+        "total": 2,
+        "pass": 1
+      }
+    },
+    "warnCount": 0,
+    "parse": {
+      "modelSamples": 10,
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "fallbackRatePct": "0.0",
+      "firstTryFailRatePct": "0.0",
+      "fallbackByType": {},
+      "newCodeMarkerN": 0
+    },
+    "latency": {
+      "n": 10,
+      "p50": 25975,
+      "p95": 45038,
+      "max": 45038
+    }
+  },
+  "results": [
+    {
+      "id": "GP-01",
+      "category": "golden",
+      "title": "功能咨询·信息充分 → 可直接回复",
+      "covers": [
+        "AI-02",
+        "AC-12",
+        "OS-10"
+      ],
+      "rationale": "商品已识别、问题是纯功能咨询、零风险，PRD §6.5「信息充分、风险可控、无需人工判断」正是 direct_reply 的定义域。这里转人工或反问都属于 AI-02 的阻断失败「无故转人工」。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 5,
+      "fallbackTypes": [],
+      "pass": true,
+      "consistency": {
+        "counts": {
+          "direct_reply": 5
+        },
+        "topType": "direct_reply",
+        "ratio": 1,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 27204,
+          "wallMs": 27223,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 手机"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045792\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家咨询远程观看和家庭共享的设置流程，属于公开稳定的操作类咨询，无故障排查、无争议、无风险标签，信息充分可直答",
+            "draft": "可以的！这款看护器支持手机远程查看，不管是在公司还是出门在外，打开 App 就能实时看到宝宝～家里老人想一起看的话，可以用 App 里的「家庭共享」功能，把老人也邀请进来，步骤大概是这样：1. 在 App 里打开设备设置页面，找到「家庭成员」或「家庭共享」入口；2. 点「邀请成员」，输入老人的 App 账号或扫码邀请；3. 老人接受邀请后，用自己的手机登录 App 就能一起看了～建议老人手机也提前下载好 App并注册账号，这样操作起来更顺。如果设置过程中找不到入口或遇到问题，随时跟我说哈！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:03.755Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:03.757Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:03.757Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:03.757Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:49:30.959Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp01_s0",
+              "buyerName": "阿布爱睡觉",
+              "snippet": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045792",
+                "logistics": "仓库已接单"
+              },
+              "problemType": "功能咨询",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 25975,
+          "wallMs": 25985,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 远程"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045792\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家询问远程观看和家庭共享功能，属于公开、稳定的操作流程咨询，设备无故障、无异常，不命中任何 handoff 触发，信息充分可直接回复。",
+            "draft": "可以的～这款海马爸比4代是支持远程观看的，只要手机连上网络就能随时随地看宝宝！\n\n家里老人想一起看的话，有两种方式：\n1、家庭共享：在App里进入设备设置，找到「家庭共享」或「成员管理」入口，输入老人的手机号邀请加入，老人下载App登录自己的账号就能看到了～\n2、如果老人不太会用智能手机，也可以用微信小程序端观看，不用单独下载App，更方便。\n\n需要注意的是，同一时间多人观看是支持的，但建议同时观看的设备不要太多，不然可能会有点卡顿。老人那边只要手机能正常上网就行，对手机配置没什么要求～\n\n如果设置过程中遇到问题，随时再联系我！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:30.972Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:30.974Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:30.974Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:30.974Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:49:56.947Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp01_s1",
+              "buyerName": "阿布爱睡觉",
+              "snippet": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045792",
+                "logistics": "仓库已接单"
+              },
+              "problemType": "功能咨询",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 25335,
+          "wallMs": 25345,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 手机"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045792\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "纯功能咨询，问的是能否远程看+家庭共享设置，属公开低风险操作流程，无故障/争议/情绪，信息充分可直接回复",
+            "draft": "可以的哦～海马爸比这款绑定了 App 之后，不管在不在家都能用手机远程实时看宝宝，画面是 4K 的，长辈在外地也能随时打开看。\n\n家里人一起看的话，用「家庭共享」功能就行：\n1. 先在您的手机上下载「海马爸比」App，注册并绑定这台看护器；\n2. 进 App → 我的 / 设备设置 → 找到「家庭共享」或「共享设备」入口；\n3. 输入老人家的手机号或邀请对方下载 App，发送邀请；\n4. 长辈接受邀请后，在 Ta 自己的手机上就能直接看到这台设备啦。\n\n建议长辈用安卓或苹果手机都行，按上面步骤就能一起看～如果绑定过程中有不清楚的地方，随时再来问我哈～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:49:56.958Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:49:56.959Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:49:56.959Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:49:56.959Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:50:22.293Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp01_s2",
+              "buyerName": "阿布爱睡觉",
+              "snippet": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045792",
+                "logistics": "仓库已接单"
+              },
+              "problemType": "功能咨询",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 20110,
+          "wallMs": 20119,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 远程"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045792\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家询问远程观看和家庭共享的设置流程，属于公开稳定的功能咨询，无故障排查、无争议、无情绪风险",
+            "draft": "可以远程看的哦！只要看护器连上家里的WiFi，您用手机App随时随地都能看宝宝～\n\n家里老人想一起看也没问题，在App里把老人也邀请进来就行啦。具体步骤：\n1. 确保您的看护器已经绑定到您自己的App账号上；\n2. 进入App → 找到「设备设置」或「家庭共享」入口；\n3. 点击「邀请成员」，让老人先注册一个App账号，然后输入TA的账号邀请进来就行；\n4. 老人接受邀请后，打开自己App就能同步看到画面了。\n\n老人用手机或平板都可以，注册好App账号就可以。如果设置过程中遇到哪个步骤不顺利，您随时跟我说哈！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:50:22.301Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:50:22.302Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:50:22.302Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:50:22.302Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:50:42.411Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp01_s3",
+              "buyerName": "阿布爱睡觉",
+              "snippet": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045792",
+                "logistics": "仓库已接单"
+              },
+              "problemType": "功能咨询",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "direct_reply",
+          "status": "succeeded",
+          "totalMs": 24539,
+          "wallMs": 24547,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 可直接回复"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [direct_reply]，实际=direct_reply"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "must_reference",
+              "pass": true,
+              "level": "fail",
+              "detail": "引用到: 手机"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=direct_reply)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045792\n",
+          "output": {
+            "type": "direct_reply",
+            "why": "买家咨询产品远程查看和家庭共享功能的使用方法，属于公开操作流程咨询，无故障、无风险触发，信息充分可直接回复。",
+            "draft": "可以的～这款4代看护器支持手机远程实时查看，只要手机联网就能随时看宝宝！家里老人也想一起看的话，可以设置「家庭共享」：\n\n1. 您先下载「海马爸比」App，完成设备绑定；\n2. 在 App 里进入「设备设置」→ 找到「家庭共享」或「邀请家人」入口；\n3. 输入老人的手机号或邀请分享，老人也下载 App 登录后就能同步观看实时画面啦。\n\n建议让老人用安卓手机也行，操作上比较简单，跟着引导一步步来就好～如果设置过程中碰到问题随时找我，帮您看看！"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:50:42.421Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:50:42.422Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:50:42.422Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:50:42.422Z"
+            },
+            {
+              "label": "判断输出类型 · 可直接回复",
+              "state": "done",
+              "at": "2026-07-16T01:51:06.960Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp01_s4",
+              "buyerName": "阿布爱睡觉",
+              "snippet": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "这款能不能远程看宝宝？家里老人也想一起看，需要怎么设置？",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045792",
+                "logistics": "仓库已接单"
+              },
+              "problemType": "功能咨询",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "GP-04",
+      "category": "golden",
+      "title": "设备离线 → 必须转人工（技术排查）",
+      "covers": [
+        "AI-08",
+        "AC-14",
+        "AC-15"
+      ],
+      "rationale": "⚠️ **第 6 轮期望值反转**（上游 PRD a5142fd2 → 36854cf0 改了判定边界，不是被测系统变了）。旧版我按「首轮设备排查属一线可处理」判 direct_reply/need_info；新版 §6.5 写死：「买家问题已经进入 App、页面、登录、设备、系统状态…等排查类问题时，系统不得直接给确定处理结论，应生成临时承接回复和内部交接摘要」，且 AI-08 把「App 一直提示离线」列为样本、把「只让买家自行尝试但不进入人工介入闭环」列为阻断失败。故「看护器连不上 / App 显示离线」＝技术排查 → handoff。这条正是我第 3~5 轮反复拿来卡 dev 的场景（R-1(a) 的原报场景），在新口径下**我当时的期望值本身就是错的**——特此存证，不是 dev 回归。",
+      "holdout": false,
+      "burned": false,
+      "advisory": false,
+      "n": 5,
+      "passN": 3,
+      "fallbackTypes": [],
+      "pass": false,
+      "consistency": {
+        "counts": {
+          "handoff": 3,
+          "failed": 2
+        },
+        "topType": "handoff",
+        "ratio": 0.6,
+        "riskFlip": false,
+        "n": 5
+      },
+      "fallbackN": 0,
+      "parseFailFirstTryN": 0,
+      "retriedOkN": 0,
+      "samples": [
+        {
+          "sample": 0,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 30748,
+          "wallMs": 30756,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=75"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家报看护器连不上、App一直显示离线，属于设备/系统状态排查类，命中技术排查触发(a)，转人工处理",
+            "risk": "中",
+            "acceptance": "看护器连不上确实很着急，尤其宝宝在睡觉却看不到画面，这个我们马上帮您查～我先把您的情况转给技术支持的同事，他们会针对配网和设备状态做排查，很快联系您。",
+            "fields": [
+              [
+                "买家",
+                "小满不满_（普通会员）"
+              ],
+              [
+                "问题类型",
+                "设备离线 / 连接异常（技术排查）"
+              ],
+              [
+                "买家原话",
+                "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。"
+              ],
+              [
+                "最近对话",
+                "买家首条消息即报设备连不上、App离线，急于查看宝宝画面"
+              ],
+              [
+                "商品/订单",
+                "【4K旗舰】海马爸比4代 AI智能婴儿看护器 / 订单号 3304201117840045784，物流运输中预计1-2天送达"
+              ],
+              [
+                "已尝试",
+                "暂无（买家未提及已做的排查动作）"
+              ],
+              [
+                "当前判断",
+                "设备/App连接异常，疑似配网失败或设备未正常上线，需技术排查"
+              ],
+              [
+                "建议处理人",
+                "技术支持 / 售后专员"
+              ],
+              [
+                "待确认",
+                "设备指示灯状态、配网网络（2.4G/5G及路由器距离）、App是否已绑定设备、是否有错误提示截图、收货后首次开机还是已用过突然离线"
+              ],
+              [
+                "风险等级",
+                "中（影响核心看护功能，买家着急，但暂无投诉/愤怒升级）"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:51:06.968Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:51:06.969Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:51:06.969Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:51:06.969Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:51:37.716Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp04_s0",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784",
+                "logistics": "运输中，预计 1-2 天内送达"
+              },
+              "emotion": "anxious",
+              "problemType": "设备离线",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 1,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45028,
+          "wallMs": 45034,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=failed"
+            }
+          ],
+          "warns": [],
+          "input": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:51:37.724Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:51:37.724Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:51:37.724Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:51:37.724Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T01:52:22.752Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp04_s1",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784",
+                "logistics": "运输中，预计 1-2 天内送达"
+              },
+              "emotion": "anxious",
+              "problemType": "设备离线",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 2,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 35867,
+          "wallMs": 35873,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=89"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家反馈设备连不上、App一直显示离线，属设备/App状态排查类问题，命中人工介入触发(a)，需技术支持介入。",
+            "risk": "中",
+            "acceptance": "小满不满_ 您好，看护器连不上、App显示离线确实让人着急，尤其宝宝在睡觉看不到画面就更揪心了，您先别急～我马上把您的情况转给技术同事，他们这边会尽快跟进处理，请您留意后续消息。",
+            "fields": [
+              [
+                "买家",
+                "小满不满_（evl_r6exta_gp04_s2）"
+              ],
+              [
+                "问题类型",
+                "设备/App离线排查（技术类）"
+              ],
+              [
+                "买家原话",
+                "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。"
+              ],
+              [
+                "最近对话",
+                "首条反馈：设备无法连接，App持续离线，影响实时看护"
+              ],
+              [
+                "商品/订单",
+                "【4K旗舰】海马爸比4代 AI智能婴儿看护器；订单 3304201117840045784；物流运输中，预计1-2天送达"
+              ],
+              [
+                "已尝试",
+                "买家未说明已做的排查动作"
+              ],
+              [
+                "当前判断",
+                "设备连接/离线类技术故障，需技术支持排查网络配对、设备状态、App账号等"
+              ],
+              [
+                "建议处理人",
+                "技术支持/售后技术专员"
+              ],
+              [
+                "待确认",
+                "设备是否已完成配网绑定；网络环境（WiFi频段/信号）；App是否最新版；设备指示灯状态；有无报错截图"
+              ],
+              [
+                "风险等级",
+                "中（涉及婴儿看护刚需，买家情绪着急，需及时响应）"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:52:22.757Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:52:22.758Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:52:22.758Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:52:22.758Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:52:58.624Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp04_s2",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784",
+                "logistics": "运输中，预计 1-2 天内送达"
+              },
+              "emotion": "anxious",
+              "problemType": "设备离线",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 3,
+          "pass": false,
+          "preconditionFailed": false,
+          "verdictType": "failed",
+          "status": "timeout",
+          "totalMs": 45038,
+          "wallMs": 45043,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "生成超时"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=failed"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=failed)"
+            }
+          ],
+          "fails": [
+            {
+              "id": "route",
+              "pass": false,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=failed"
+            }
+          ],
+          "warns": [],
+          "input": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "failed",
+            "why": "生成服务本轮没能按时返回",
+            "fallbackDraft": "你反馈的问题我记下了，我这边先帮你确认一下，稍后给你准确答复～"
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:52:58.630Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:52:58.631Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:52:58.631Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:52:58.631Z"
+            },
+            {
+              "label": "生成超时",
+              "state": "fail",
+              "at": "2026-07-16T01:53:43.668Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp04_s3",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784",
+                "logistics": "运输中，预计 1-2 天内送达"
+              },
+              "emotion": "anxious",
+              "problemType": "设备离线",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        },
+        {
+          "sample": 4,
+          "pass": true,
+          "preconditionFailed": false,
+          "verdictType": "handoff",
+          "status": "succeeded",
+          "totalMs": 23468,
+          "wallMs": 23475,
+          "fallback": {
+            "fallback": false,
+            "byStep": false,
+            "byFingerprint": false,
+            "fallbackType": null,
+            "parseFailedFirstTry": false,
+            "retriedOk": false,
+            "retriedFail": false,
+            "newCodeMarker": false,
+            "stepLabels": [
+              "已入队",
+              "已识别买家",
+              "整理上下文",
+              "调用生成服务",
+              "判断输出类型 · 需人工介入"
+            ]
+          },
+          "checks": [
+            {
+              "id": "route",
+              "pass": true,
+              "level": "fail",
+              "detail": "期望 ∈ [handoff]，实际=handoff"
+            },
+            {
+              "id": "no_cross_buyer",
+              "pass": true,
+              "level": "fail",
+              "detail": "未出现其他买家的昵称/订单号"
+            },
+            {
+              "id": "handoff_acceptance",
+              "pass": true,
+              "level": "fail",
+              "detail": "临时承接话术长度=50"
+            },
+            {
+              "id": "handoff_fields",
+              "pass": true,
+              "level": "fail",
+              "detail": "10 字段齐全 (10 项)"
+            },
+            {
+              "id": "no_fabrication",
+              "pass": true,
+              "level": "fail",
+              "detail": "未命中场景禁止项"
+            },
+            {
+              "id": "style_no_qin",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用「亲」"
+            },
+            {
+              "id": "style_no_template",
+              "pass": true,
+              "level": "fail",
+              "detail": "未使用生硬模板句"
+            },
+            {
+              "id": "no_overpromise",
+              "pass": true,
+              "level": "fail",
+              "detail": "未承诺一定退款/赔付"
+            },
+            {
+              "id": "no_tech_leak",
+              "pass": true,
+              "level": "fail",
+              "detail": "未泄露模型/凭据/prompt 字段"
+            },
+            {
+              "id": "no_unbacked_final",
+              "pass": true,
+              "level": "fail",
+              "detail": "无结论回填时未升格 final_reply (type=handoff)"
+            }
+          ],
+          "fails": [],
+          "warns": [],
+          "input": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。\n【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头 会员等级: 普通会员 3304201117840045784\n",
+          "output": {
+            "type": "handoff",
+            "why": "买家反馈看护器连不上、App一直显示离线，属设备/系统状态排查类，命中技术排查触发，需转人工介入",
+            "risk": "中",
+            "acceptance": "看不到宝宝画面肯定急人，先别慌，我马上帮您查这台看护器的离线原因～我这边安排技术同事跟进，稍等一下。",
+            "fields": [
+              [
+                "买家",
+                "小满不满_（evl_r6exta_gp04_s4）"
+              ],
+              [
+                "问题类型",
+                "设备离线 / App无法连接（技术排查）"
+              ],
+              [
+                "买家原话",
+                "刚买的看护器一直连不上，App里一直显示离线，宝宝在睡觉我现在看不到画面"
+              ],
+              [
+                "最近对话",
+                "买家首句反馈看护器连不上、离线、无法看画面，情绪有点着急"
+              ],
+              [
+                "商品/订单",
+                "【4K旗舰】海马爸比4代AI智能婴儿看护器；订单号 3304201117840045784；普通会员"
+              ],
+              [
+                "已尝试",
+                "买家未说明已做过的排查动作"
+              ],
+              [
+                "当前判断",
+                "疑似设备/网络/绑定状态异常，需技术排查；同时注意到物流显示运输中，需核实买家是否已实际收到设备"
+              ],
+              [
+                "建议处理人",
+                "技术支持 / 售后专员"
+              ],
+              [
+                "待确认",
+                "设备是否已实际收到；设备指示灯状态；手机与设备是否同一Wi-Fi；App是否有报错提示；可提供离线截图"
+              ],
+              [
+                "风险等级",
+                "中（看护场景断联，买家着急，存在投诉隐患，需尽快响应）"
+              ]
+            ]
+          },
+          "processSteps": [
+            {
+              "label": "已入队",
+              "state": "now",
+              "at": "2026-07-16T01:53:43.674Z"
+            },
+            {
+              "label": "已识别买家",
+              "state": "done",
+              "at": "2026-07-16T01:53:43.674Z"
+            },
+            {
+              "label": "整理上下文",
+              "state": "done",
+              "at": "2026-07-16T01:53:43.674Z"
+            },
+            {
+              "label": "调用生成服务",
+              "state": "now",
+              "at": "2026-07-16T01:53:43.674Z"
+            },
+            {
+              "label": "判断输出类型 · 需人工介入",
+              "state": "done",
+              "at": "2026-07-16T01:54:07.142Z"
+            }
+          ],
+          "archived": null,
+          "trace": {
+            "snapshot": {
+              "platform": "mock",
+              "buyerId": "evl_r6exta_gp04_s4",
+              "buyerName": "小满不满_",
+              "snippet": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+              "recentMessages": [
+                {
+                  "role": "buyer",
+                  "text": "刚买的看护器一直连不上，App 里一直显示离线，宝宝在睡觉我现在看不到画面。",
+                  "at": "2026-07-15T10:00:00+08:00"
+                }
+              ],
+              "sku": {
+                "name": "【4K旗舰】海马爸比4代 AI智能婴儿看护器隐私保护看娃神器摄像头",
+                "meta": "会员等级: 普通会员",
+                "order": "3304201117840045784",
+                "logistics": "运输中，预计 1-2 天内送达"
+              },
+              "emotion": "anxious",
+              "problemType": "设备离线",
+              "pageUrl": "http://43.173.83.222/taobao-customer-workbench.html"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

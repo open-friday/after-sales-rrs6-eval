@@ -4,7 +4,15 @@
 
 - Oasis 项目：`proj_after_sales_rrs6` · 工单：`ws:wo-rrs6`
 - 被测系统：[after-sales-rrs6-backend](https://github.com/open-friday/after-sales-rrs6-backend) + [after-sales-rrs6-extension](https://github.com/open-friday/after-sales-rrs6-extension)
-- 判定口径来源：PRD `artifact:prd:rrs6-7b0ebd07@a5142fd2` §6.5 / §6.10 / §7.4（AI-01..AI-07）
+- 判定口径来源：PRD `artifact:prd:rrs6-7b0ebd07@36854cf0` §6.5 / §6.10 / §7.4（AI-01..**AI-09**）
+
+> **⚠️ 第 6 轮：判定边界被上游改了，本仓大量期望值随之反转。**
+> PRD `a5142fd2 → 36854cf0` 重写 §6.5，新增 **AI-08**（技术排查 → 必须转人工）与
+> **AI-09**（纯流程性咨询 → 必须直接回复），并明写「技术排查**不再区分**一线能不能自查」。
+> 于是本仓 6 条场景的期望值从「不得转人工」翻成「必须转人工」（GP-04/GP-05/BD-02/BD-03/HO-02/HO-10），
+> 2 条换了底层买家（BD-01/FL-06——新 AC-13 **明令禁止**拿 App/登录/设备类样本验 need_info）。
+> **这不是被测系统回归，是我前几轮的期望值被上游作废了**——其中 GP-04/BD-02 还是我拿来卡过 dev 的招牌场景。
+> 详见每条场景 `rationale` 里的「⚠️ 第 6 轮期望值反转」段。
 
 > **本仓只量，不修。** 评测集不改被测系统的代码去让数字好看；
 > **不许 mock 模型输出**——`run-eval.mjs` 在 `/health.modelConfigured=false` 时直接拒跑。
@@ -63,13 +71,36 @@
 ## 跑
 
 ```bash
-# 全量（需真后端 + 真 GLM）；复测一律每条 >= 5 次采样
-API_BASE=http://140.143.131.216:8797 API_TOKEN=<后端 BACKEND_ACCESS_TOKEN> \
-  node run-eval.mjs --samples 5 --holdout --concurrency 3 --out results/run-x.json
+# 0) 跑测前必做：确认被测实例真的是你要测的那版代码
+curl -H "Authorization: Bearer <token>" http://<host>/internal/hermes-runtime
+# NOT_FOUND = 旧码。共享沙箱的部署实例常年落后于 dev 的 head——
+# 部署实例归 deploy 节点管，不等于被测 head。测 dev 的产物应在 pin 住的 commit 上自建实例。
+
+# 1) 契约指纹：确认评测集复刻的扩展字段映射没漂（见 lib/ext-contract.test.mjs 的血泪注释）
+EXT_SRC=/path/to/after-sales-rrs6-extension node --test lib/ext-contract.test.mjs
+
+# 2) 全量（需真后端 + 真 GLM）；复测一律每条 >= 5 次采样，放行结论只认 --payload ext
+API_BASE=http://localhost:8901 API_TOKEN=<后端 BACKEND_ACCESS_TOKEN> \
+  node run-eval.mjs --samples 5 --holdout --payload ext --concurrency 1 --out results/run-x.json
 
 node run-eval.mjs --only GP-01,AD-01     # 指定场景
 node run-eval.mjs --out results/x.json   # 指定输出
 ```
+
+### ⚠️ 永远 `--concurrency 1` + 多实例分片
+
+后端「每次 prompt 一次 ACP session」但**只有一个 stdio 子进程**：并发请求在子进程里排队，
+单请求墙钟被拉长 → 撞 PRD 的 45s 硬超时 → 落 `status=failed` → 被判定器记成**路由失败**。
+第 4、6 轮我各栽过一次，两次都差点把自己跑法造成的超时回压给 dev。
+
+正确做法是**起 N 个后端实例（各自独立 `DATA_DIR` + 独立 ACP 子进程），每个实例串行跑一个分片**：
+
+```bash
+API_BASE=http://localhost:8901 ... --concurrency 1 --only <分片1> &
+API_BASE=http://localhost:8902 ... --concurrency 1 --only <分片2> &
+```
+
+真并行但每实例内部串行——既不丢吞吐，又不自造超时。**看到 ≈45000ms 的 failed，先归因到自己。**
 
 结果写 `results/run-<id>.json`：每条场景的输入、后端原始 `GenerationRecord`、逐项判定、耗时。
 
