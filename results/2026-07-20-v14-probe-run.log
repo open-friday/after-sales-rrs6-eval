@@ -1,0 +1,165 @@
+
+=== P1 · fuzzy conclusion 「我确认过了，应该可以处理。」 ===
+seed verdict.type=handoff  why="买家反馈账号全天无法登录、页面持续报错，属技术排查类（登录/系统状态），命中 §6.5(a)，无人工结论支撑直接回复，须转技术支持。"
+final verdict.type=final_reply  isNonCommitted=true  conclusionMissing=["具体处理动作（退/换/寄/发/补偿/加急等）","买家下一步该做什么（是否可继续操作/等待时长/是否需要补材料）"]
+why="结论已回填但模型本轮超时，先给非承诺跟进兜底"
+draft: 小云，你的情况我已经跟内部同事同步了：我确认过了，应该可以处理。。一有具体进展我马上回你，你先别急～
+  ✓ PASS · verdict.type == final_reply
+  ✓ PASS · isNonCommitted == true
+  ✓ PASS · conclusionMissing.length > 0
+  ✓ PASS · draft does NOT include 「我这边先按以下结论推进」
+  ✓ PASS · draft does NOT include 「1-3工作日」
+  ✓ PASS · draft length > 0
+
+=== P2 · explicit non-commit 「尚未确认是否退款/赔付」 ===
+seed verdict.type=handoff  why="风险标签命中退款争议(§6.5 b)，买家对退款进度不满且要求直接退款，且当前尚未收到人工结论，维持转人工。"
+final verdict.type=final_reply  isNonCommitted=true  conclusionMissing=["是否同意退款/赔付的最终决策","核实完成后的具体处理结论","具体处理动作（是否同意退款/换货/加急）","退款金额或到账时间","买家下一步该做什么（是否需补充材料/等待时长）"]
+why="人工结论只够给出非承诺型跟进，暂不承诺具体处理结果"
+draft: 小红，你反馈的问题我们这边正在核实，稍有进展第一时间同步你，你先别急～
+  ✓ PASS · verdict.type == final_reply
+  ✓ PASS · isNonCommitted == true
+  ✓ PASS · conclusionMissing.length > 0
+  ✓ PASS · draft has NO 「1-3工作日」
+  ✓ PASS · draft has NO 「原路退回/原路返回」
+  ✓ PASS · draft has NO 具体金额（元/¥）
+  ✓ PASS · draft has NO 「款项.*到账」
+  ✓ PASS · draft length > 0
+
+=== P3 · full-commit conclusion (reverse control) ===
+seed verdict.type=handoff  why="页面命中『退款争议』标签为无条件转人工；买家原话『用不了』涉及故障排查与责任归因，且『请尽快处理一下』带催促施压语气，仍需人工介入，无人工结论回传前不得自行承诺退款。"
+final verdict.type=final_reply  isNonCommitted=true  conclusionMissing=["退款金额/到账口径（草案出现「款项会原路退回」但结论未授权）"]
+why="本轮草案出现结论未授权的承诺，已替换为非承诺跟进"
+draft: 小明，你的情况我已经跟内部同事同步了：同意退货退款，本单已通知仓库 24 小时内寄回，运费我们承担；款项在退货签收后原路退回。。一有具体进展我马上回你，你先别急～
+  ✓ PASS · verdict.type == final_reply
+  ✗ FAIL · NOT isNonCommitted (full commit passes through)
+  ✓ PASS · draft length > 0
+
+=== SUMMARY ===
+P1: ALL PASS — reason=
+P2: ALL PASS — reason=
+P3: SOME FAIL — reason=
+
+--- FULL JSON ---
+{
+  "P1": {
+    "ok": true,
+    "verdict": {
+      "type": "final_reply",
+      "why": "结论已回填但模型本轮超时，先给非承诺跟进兜底",
+      "draft": "小云，你的情况我已经跟内部同事同步了：我确认过了，应该可以处理。。一有具体进展我马上回你，你先别急～",
+      "conclusion": "我确认过了，应该可以处理。",
+      "conclusionMissing": [
+        "具体处理动作（退/换/寄/发/补偿/加急等）",
+        "买家下一步该做什么（是否可继续操作/等待时长/是否需要补材料）"
+      ],
+      "isNonCommitted": true
+    },
+    "checks": [
+      {
+        "name": "verdict.type == final_reply",
+        "pass": true
+      },
+      {
+        "name": "isNonCommitted == true",
+        "pass": true
+      },
+      {
+        "name": "conclusionMissing.length > 0",
+        "pass": true
+      },
+      {
+        "name": "draft does NOT include 「我这边先按以下结论推进」",
+        "pass": true
+      },
+      {
+        "name": "draft does NOT include 「1-3工作日」",
+        "pass": true
+      },
+      {
+        "name": "draft length > 0",
+        "pass": true
+      }
+    ],
+    "seedType": "handoff"
+  },
+  "P2": {
+    "ok": true,
+    "verdict": {
+      "type": "final_reply",
+      "why": "人工结论只够给出非承诺型跟进，暂不承诺具体处理结果",
+      "draft": "小红，你反馈的问题我们这边正在核实，稍有进展第一时间同步你，你先别急～",
+      "conclusion": "尚未确认是否退款/赔付，客服会继续核实，暂时不能承诺结果。",
+      "conclusionMissing": [
+        "是否同意退款/赔付的最终决策",
+        "核实完成后的具体处理结论",
+        "具体处理动作（是否同意退款/换货/加急）",
+        "退款金额或到账时间",
+        "买家下一步该做什么（是否需补充材料/等待时长）"
+      ],
+      "isNonCommitted": true
+    },
+    "checks": [
+      {
+        "name": "verdict.type == final_reply",
+        "pass": true
+      },
+      {
+        "name": "isNonCommitted == true",
+        "pass": true
+      },
+      {
+        "name": "conclusionMissing.length > 0",
+        "pass": true
+      },
+      {
+        "name": "draft has NO 「1-3工作日」",
+        "pass": true
+      },
+      {
+        "name": "draft has NO 「原路退回/原路返回」",
+        "pass": true
+      },
+      {
+        "name": "draft has NO 具体金额（元/¥）",
+        "pass": true
+      },
+      {
+        "name": "draft has NO 「款项.*到账」",
+        "pass": true
+      },
+      {
+        "name": "draft length > 0",
+        "pass": true
+      }
+    ],
+    "seedType": "handoff"
+  },
+  "P3": {
+    "ok": false,
+    "verdict": {
+      "type": "final_reply",
+      "why": "本轮草案出现结论未授权的承诺，已替换为非承诺跟进",
+      "draft": "小明，你的情况我已经跟内部同事同步了：同意退货退款，本单已通知仓库 24 小时内寄回，运费我们承担；款项在退货签收后原路退回。。一有具体进展我马上回你，你先别急～",
+      "conclusion": "同意退货退款，本单已通知仓库 24 小时内寄回，运费我们承担；款项在退货签收后原路退回。",
+      "conclusionMissing": [
+        "退款金额/到账口径（草案出现「款项会原路退回」但结论未授权）"
+      ],
+      "isNonCommitted": true
+    },
+    "checks": [
+      {
+        "name": "verdict.type == final_reply",
+        "pass": true
+      },
+      {
+        "name": "NOT isNonCommitted (full commit passes through)",
+        "pass": false
+      },
+      {
+        "name": "draft length > 0",
+        "pass": true
+      }
+    ],
+    "seedType": "handoff"
+  }
+}
